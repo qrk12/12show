@@ -1,15 +1,16 @@
 <template>
   <div>
-    <el-dialog :title="cropTitle" :visible.sync="cropImgVisible" :before-close="close" append-to-body>
+    <el-dialog :title="cropTitle" :visible.sync="cropImgVisible" :before-close="close" :append-to-body="true">
       <div class="crop-content">
         <vueCropper
           v-if="cropImgVisible"
           ref="cropper"
           :img="contentSrc"
+          :can-move="false"
           :auto-crop="true"
           :center-box="true"
-          :fixed="true"
-          :fixed-number="[2,3]"
+          :fixed="fixed"
+          :fixed-number="fixedNumber"
           output-type="jpeg"
         />
       </div>
@@ -41,6 +42,16 @@ export default {
     cropTitle: {
       type: String,
       default: ''
+    },
+    fixed: {
+      type: Boolean,
+      default: true
+    },
+    fixedNumber: {
+      type: Array,
+      default() {
+        return [1, 1]
+      }
     }
   },
   methods: {

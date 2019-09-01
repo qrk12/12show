@@ -9,16 +9,18 @@
 
       <el-row>
         <el-col :span="6">
-          <div class="cover-label">封面图片</div>
-          <el-image class="cover-image" :src="setting.coverImage" fit="cover" />
+          <div @click="imageVisible = true">
+            <div class="cover-label">封面图片</div>
+            <el-image class="cover-image" :src="h5Json.setting.coverImage" fit="cover" />
+          </div>
         </el-col>
         <el-col :span="18">
           <el-form size="mini">
             <el-form-item label="标题">
-              <el-input v-model="setting.title" />
+              <el-input v-model="h5Json.setting.title" />
             </el-form-item>
             <el-form-item label="描述">
-              <el-input v-model="setting.description" type="textarea" />
+              <el-input v-model="h5Json.setting.description" type="textarea" />
             </el-form-item>
           </el-form>
         </el-col>
@@ -27,18 +29,25 @@
       <el-row>
         <el-button type="primary" size="medium">发布</el-button>
         <el-button type="default" size="medium">保存</el-button>
-        <el-button type="default" size="medium">取消</el-button>
+        <el-button type="default" size="medium" @click="onCloseSetting">取消</el-button>
       </el-row>
 
     </div>
+
+    <ImageGallery :image-visible.sync="imageVisible" :is-crop="true" crop-title="裁剪封面" @selected="onCoverImage" />
 
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
+import ImageGallery from '@/components/ImageGallery'
+
 export default {
   name: 'BasicSetting',
+  components: {
+    ImageGallery
+  },
   data() {
     return {
       // 设置
@@ -46,8 +55,12 @@ export default {
         coverImage: 'http://d-pic-image.yesky.com/1080x-/uploadImages/2019/044/59/1113V6L3Q6TY.jpg',
         title: '',
         description: ''
-      }
+      },
+      imageVisible: false
     }
+  },
+  computed: {
+    ...mapState(['h5Json'])
   },
   methods: {
     ...mapMutations([
@@ -55,6 +68,9 @@ export default {
     ]),
     onCloseSetting() {
       this['setting/onSetting']()
+    },
+    onCoverImage(url) {
+      this.setting.coverImage = url
     }
   }
 }
@@ -62,10 +78,8 @@ export default {
 
 <style lang="scss" scoped>
 .right-setting{
-    position: relative;
     background-color: #ffffff;
     height: 100vh;
-    z-index: 100;
 
     .close{
         position: absolute;

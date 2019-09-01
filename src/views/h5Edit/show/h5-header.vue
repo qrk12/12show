@@ -36,14 +36,13 @@
       </el-col>
       <el-col :span="8">
         <div class="flex-row-reverse">
-          <span class="text" @click="onSetting()">设置</span>
-          <span class="text">预览</span>
+          <span class="text" @click="onSetting()">预览和设置</span>
           <span class="text">保存</span>
         </div>
       </el-col>
     </el-row>
 
-    <ImageGallery :image-visible.sync="imageVisible" :is-crop="isCrop" crop-title="裁剪背景" @selected="onAddimage" />
+    <ImageGallery :image-visible.sync="imageVisible" :is-crop="isCrop" crop-title="裁剪背景" :fixed-number="[2,3]" @selected="onAddimage" />
     <AudioDialog :audio-visible.sync="audioVisible" />
   </div>
 </template>

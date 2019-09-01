@@ -39,8 +39,8 @@
 
     </el-form>
 
-    <ImageGallery :image-visible.sync="imageVisible" :is-crop="true" @selected="onSelected" />
-    <ImageCrop :crop-img-visible.sync="cropImgVisible" :content-src="currentPageData.background.image" @selected="onSelected" />
+    <ImageGallery :image-visible.sync="imageVisible" :is-crop="true" :fixed-number="[2,3]" @selected="onSelected" />
+    <ImageCrop :crop-img-visible.sync="cropImgVisible" :content-src="currentPageData.background.image" :fixed-number="[2,3]" @selected="onSelected" />
   </div>
 </template>
 

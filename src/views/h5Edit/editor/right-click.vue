@@ -18,7 +18,7 @@
       <div class="item" @click="onDelete()">删除</div>
     </div>
 
-    <ImageDialog :image-visible.sync="imageVisible" />
+    <ImageGallery :image-visible.sync="imageVisible" />
 
   </div>
 
@@ -26,12 +26,12 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
-import ImageDialog from '../header/image-dialog'
+import ImageGallery from '@/components/ImageGallery'
 
 export default {
   name: 'RightClick',
   components: {
-    ImageDialog
+    ImageGallery
   },
   data() {
     return {

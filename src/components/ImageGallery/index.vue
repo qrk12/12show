@@ -1,7 +1,7 @@
 <template>
   <div class="image-dialog">
 
-    <el-dialog :visible.sync="imageVisible" width="1000px" :before-close="close">
+    <el-dialog :visible.sync="imageVisible" width="1000px" :before-close="close" :destroy-on-close="false" :modal-append-to-body="false">
 
       <div slot="title">
         <span class="dialog-title">图片库</span>
@@ -11,10 +11,10 @@
 
       <el-tabs v-model="tabIndex" class="tab-card" tab-position="left" type="border-card">
         <el-tab-pane label="最近使用" name="first">
-          <ImageManage :is-crop="isCrop" :crop-title="cropTitle" @close="close" @selected="selected" />
+          <ImageManage :is-crop="isCrop" :crop-title="cropTitle" :fixed="fixed" :fixed-number="fixedNumber" @close="close" @selected="selected" />
         </el-tab-pane>
         <el-tab-pane label="我的上传" name="second">
-          <ImageManage :is-crop="isCrop" :crop-title="cropTitle" @close="close" @selected="selected" />
+          <ImageManage :is-crop="isCrop" :crop-title="cropTitle" :fixed="fixed" :fixed-number="fixedNumber" @close="close" @selected="selected" />
         </el-tab-pane>
       </el-tabs>
 
@@ -43,6 +43,16 @@ export default {
     cropTitle: {
       type: String,
       default: ''
+    },
+    fixed: {
+      type: Boolean,
+      default: true
+    },
+    fixedNumber: {
+      type: Array,
+      default() {
+        return [1, 1]
+      }
     }
   },
   data() {

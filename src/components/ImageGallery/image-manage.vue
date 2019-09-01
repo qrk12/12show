@@ -50,7 +50,7 @@
       :total="400"
     />
 
-    <ImageCrop :crop-img-visible.sync="cropImgVisible" :content-src="contentSrc" :crop-title="cropTitle" @selected="onSelected" />
+    <ImageCrop :crop-img-visible.sync="cropImgVisible" :content-src="contentSrc" :crop-title="cropTitle" :fixed="fixed" :fixed-number="fixedNumber" @selected="onSelected" />
   </div>
 </template>
 
@@ -73,6 +73,16 @@ export default {
     cropTitle: {
       type: String,
       default: ''
+    },
+    fixed: {
+      type: Boolean,
+      default: true
+    },
+    fixedNumber: {
+      type: Array,
+      default() {
+        return [1, 1]
+      }
     }
   },
   data() {

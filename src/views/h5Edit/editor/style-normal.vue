@@ -105,37 +105,22 @@
 
     </el-form>
 
-    <el-dialog title="裁剪图片" :visible.sync="cropImgVisible">
-      <div class="crop-content">
-        <vueCropper
-          v-if="cropImgVisible"
-          ref="cropper"
-          :img="currentItemData.content"
-          :auto-crop="true"
-          :center-box="true"
-          output-type="jpeg"
-        />
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cropImgVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onConfimCrop">确 定</el-button>
-      </div>
-    </el-dialog>
+    <ImageGallery :image-visible.sync="imageVisible" :is-crop="false" @selected="onSelected" />
 
-    <ImageDialog :image-visible.sync="imageVisible" img-type="edit" />
+    <ImageCrop :crop-img-visible.sync="cropImgVisible" :content-src="currentItemData.content" :fixed="false" title="裁剪图片" @selected="onSelected" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { VueCropper } from 'vue-cropper'
-import ImageDialog from '../header/image-dialog'
+import ImageGallery from '@/components/ImageGallery'
+import ImageCrop from '@/components/ImageGallery/image-crop'
 
 export default {
   name: 'StyleNormal',
   components: {
-    VueCropper,
-    ImageDialog
+    ImageGallery,
+    ImageCrop
   },
   data() {
     return {
@@ -147,15 +132,8 @@ export default {
     ...mapGetters(['currentItemData'])
   },
   methods: {
-    onSubmit() {
-      console.log('submit!')
-    },
-    onConfimCrop() {
-      // 获取截图的base64 数据
-      this.$refs.cropper.getCropData((data) => {
-        this.currentItemData.content = data
-      })
-      this.cropImgVisible = false
+    onSelected(url) {
+      this.currentItemData.content = url
     }
   }
 }

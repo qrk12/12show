@@ -168,7 +168,7 @@ export default {
 
   .arrow-up{
     position: absolute;
-    z-index: 9999;
+    z-index: 999;
     top: 455px;
     left: 140px;
     font-size: 24px;
@@ -178,7 +178,7 @@ export default {
   }
   .music-icon{
     position: absolute;
-    z-index: 9999;
+    z-index: 999;
     top: 20px;
     left: 270px;
     font-size: 24px;
