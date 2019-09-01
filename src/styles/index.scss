@@ -1,0 +1,43 @@
+$mainColor: #409EFF;
+$mainBackgroundColor: #304156;
+
+.main-color{
+    color: $mainColor;
+}
+.background-main-color{
+    background-color: $mainBackgroundColor;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.flex{
+    display: flex;
+}
+.flex-space-between{
+    display: flex;
+    justify-content: space-between;
+}
+.flex-center{
+    display:flex;
+    justify-content: center;
+}
+
+.flex-justify-align-center{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-row-reverse{
+    display: flex;
+    flex-direction: row-reverse;
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+.cursor-default{
+    cursor: default;
+}
