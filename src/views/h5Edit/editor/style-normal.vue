@@ -26,7 +26,7 @@
         </el-row>
       </el-form-item>
 
-      <el-form-item label="文字颜色">
+      <el-form-item v-if="currentItemData.type === 'text'" label="文字颜色">
         <el-row>
           <el-col :span="5">
             <el-color-picker v-model="currentItemData.text.color" show-alpha />
@@ -37,7 +37,7 @@
         </el-row>
       </el-form-item>
 
-      <el-form-item label="对齐方式">
+      <el-form-item v-if="currentItemData.type === 'text'" label="对齐方式">
         <el-select v-model="currentItemData.text.textAlign">
           <el-option label="居左" value="left" />
           <el-option label="居中" value="center" />
@@ -46,7 +46,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="字体">
+      <el-form-item v-if="currentItemData.type === 'text'" label="字体">
         <el-select v-model="currentItemData.text.fontFamily">
           <el-option label="默认字体" value="none" />
           <el-option label="仿宋" value="FangSong" />
@@ -56,12 +56,32 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="大小">
+      <el-form-item v-if="currentItemData.type === 'text'" label="大小">
         <el-slider
           v-model="currentItemData.text.fontSize"
           show-input
           :min="1"
           :max="256"
+        />
+      </el-form-item>
+
+      <el-form-item v-if="currentItemData.type === 'text'" label="行高">
+        <el-slider
+          v-model="currentItemData.text.lineHeight"
+          show-input
+          :min="0"
+          :max="3"
+          :step="0.1"
+        />
+      </el-form-item>
+
+      <el-form-item v-if="currentItemData.type === 'text'" label="字距">
+        <el-slider
+          v-model="currentItemData.text.letterSpacing"
+          show-input
+          :min="0"
+          :max="1"
+          :step="0.01"
         />
       </el-form-item>
 
@@ -72,26 +92,6 @@
           :min="0"
           :max="1"
           :step="0.1"
-        />
-      </el-form-item>
-
-      <el-form-item label="行高">
-        <el-slider
-          v-model="currentItemData.text.lineHeight"
-          show-input
-          :min="0"
-          :max="3"
-          :step="0.1"
-        />
-      </el-form-item>
-
-      <el-form-item label="字距">
-        <el-slider
-          v-model="currentItemData.text.letterSpacing"
-          show-input
-          :min="0"
-          :max="1"
-          :step="0.01"
         />
       </el-form-item>
 

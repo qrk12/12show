@@ -25,7 +25,7 @@
     <audio
       ref="audio"
       loop
-      :src="music.url"
+      :src="music.path"
       @timeupdate="onTimeupdate"
       @loadedmetadata="onLoadedmetadata"
     >
@@ -37,6 +37,7 @@
 <script>
 import { realFormatSecond } from '@/utils/time.js'
 import { mapState, mapMutations } from 'vuex'
+import { updateMeida } from '@/api/media.js'
 
 export default {
   name: 'AudioPlay',
@@ -109,6 +110,7 @@ export default {
       this.$refs.audio.currentTime = time
     },
     onConfirm() {
+      updateMeida(this.music.mid)
       this.setMusic(this.music)
       this.$emit('close', false)
     },
@@ -142,6 +144,13 @@ export default {
     margin-top: 3px;
     margin-left: 20px;
     width: 350px;
+
+    .name{
+      width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .name{

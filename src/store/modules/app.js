@@ -1,8 +1,11 @@
+import { updateWorks } from '@/api/works.js'
 
 export default {
 //   namespaced: true,
 
   state: {
+    // 当前作品id
+    wid: null,
     // 当前操作页面索引
     activePage: 0,
     // 当前操作元素索引
@@ -56,6 +59,40 @@ export default {
       // 动画类型
       animate: []
     },
+    // 初始json
+    initJson: {
+      // 默认背景音乐
+      defaultMusic: {
+        url: '',
+        name: ''
+      },
+      // 设置
+      setting: {
+        cover_image: {
+          crop: '', // 裁剪图片
+          origin: '' // 原始图片
+        },
+        title: '',
+        description: ''
+      },
+      pages: [{
+        pageId: 1,
+        title: '页面标题',
+        // 这一页的背景图片
+        background: {
+          image: {
+            crop: '',
+            origin: ''
+          },
+          color: ''
+        },
+        music: {
+          url: '',
+          name: ''
+        },
+        items: []
+      }]
+    },
     // 总页面
     h5Json: {
       // 默认背景音乐
@@ -65,117 +102,30 @@ export default {
       },
       // 设置
       setting: {
-        coverImage: '',
+        cover_image: {
+          crop: '', // 裁剪图片
+          origin: '' // 原始图片
+        },
         title: '',
         description: ''
       },
-      // 页面
       pages: [{
         pageId: 1,
         title: '页面标题',
-        item: [
-          {
-            id: 1,
-            type: 'text',
-            content: '这是内容',
-            positionSize: {
-              top: 200,
-              left: 100,
-              width: 200,
-              height: 100
-            },
-            // 基本样式属性
-            text: {
-              padding: 0,
-              borderWidth: 0,
-              borderRadius: 0,
-              borderColor: '#000',
-              borderStyle: 'solid',
-              backgroundColor: '',
-              opacity: 1,
-              fontFamily: 'none',
-              fontSize: 16,
-              color: '',
-              textAlign: 'left',
-              lineHeight: 1,
-              letterSpacing: 0
-            },
-            transform: {
-              rotate: 0
-            },
-            boxShadow: {
-              hShadow: 0,
-              vShadow: 0,
-              blur: 0,
-              spread: 0,
-              color: ''
-            },
-            // 动画类型
-            animate: [
-              {
-                animationName: 'fadeIn',
-                animationDuration: 2,
-                animationDelay: 0.4,
-                animationIterationCount: 1,
-                isInfinite: false
-              }
-            ]
-          },
-          {
-            id: 2,
-            type: 'img',
-            content: 'http://d-pic-image.yesky.com/1080x-/uploadImages/2019/044/59/1113V6L3Q6TY.jpg',
-            positionSize: {
-              top: 100,
-              left: 100,
-              width: 100,
-              height: 100
-            },
-            // 基本样式属性
-            text: {
-              backgroundColor: '#000',
-              opacity: 100,
-              padding: 0,
-              borderWidth: 0,
-              borderRadius: 0,
-              borderColor: '#000',
-              borderStyle: 'solid',
-              fontSize: 16
-            },
-            transform: {
-              rotate: 0
-            },
-            boxShadow: {
-              hShadow: 0,
-              vShadow: 0,
-              blur: 0,
-              spread: 0,
-              color: ''
-            },
-            // 动画类型
-            animate: [
-              {
-                animationName: 'fadeIn',
-                animationDuration: 2,
-                animationDelay: 0.4,
-                animationIterationCount: 1,
-                isInfinite: false
-              }
-            ],
-            backgroundImage: ''
-          }
-        ],
         // 这一页的背景图片
         background: {
-          image: '',
+          image: {
+            crop: '',
+            origin: ''
+          },
           color: ''
         },
         music: {
           url: '',
           name: ''
-        }
-      }
-      ]
+        },
+        items: []
+      }]
     }
 
   },
@@ -186,7 +136,7 @@ export default {
     },
     // 当前操作元素
     currentItemData: (state, getters) => {
-      return getters.currentPageData.item[state.activeItem]
+      return getters.currentPageData.items[state.activeItem]
     },
     // 当前操作动画
     currentAnimate: (state, getters) => {
@@ -199,13 +149,19 @@ export default {
 
   },
   mutations: {
-    // setH5Json(state, payload) {
-    //   state.h5Json = payload
-    // }
+    setWid(state, wid) {
+      state.wid = wid
+    },
+    setH5Json(state, payload) {
+      state.h5Json = payload
+    },
     setActivePage(state, index) {
       state.activePage = index
       // 切换页面，取消元素选中
       state.activeItem = null
+    },
+    addItem(state, payload) {
+      state.h5Json.pages[state.activePage].items.push(payload)
     },
     setActiveItem(state, index) {
       state.activeItem = index
@@ -229,7 +185,22 @@ export default {
       state.h5Json.defaultMusic = music
     }
   },
-  actions: {
 
+  actions: {
+    updateWorks({ state }) {
+      return new Promise((resolve, reject) => {
+        const form = {
+          title: state.h5Json.setting.title,
+          description: state.h5Json.setting.description,
+          cover_image: state.h5Json.setting.cover_image.crop,
+          content: JSON.stringify(state.h5Json)
+        }
+        updateWorks(state.wid, form).then(res => {
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    }
   }
 }

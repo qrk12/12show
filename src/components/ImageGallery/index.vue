@@ -4,19 +4,38 @@
     <el-dialog :visible.sync="imageVisible" width="1000px" :before-close="close" :destroy-on-close="false" :modal-append-to-body="false">
 
       <div slot="title">
-        <span class="dialog-title">图片库</span>
-        <el-button type="primary" size="mini">点击上传</el-button>
-        <el-button type="info" size="mini">外链图片</el-button>
+        <div class="flex">
+          <div class="dialog-title">图片库</div>
+          <div class="flex">
+            <el-upload
+              class="upload-wrap"
+              :action="uploadUrl"
+              :headers="headers"
+              :data="{type:'img'}"
+              :on-success="onSucess"
+              :on-error="onError"
+              :show-file-list="false"
+              :on-change="onChange"
+              accept=".jpg,.png,.gif"
+              multiple
+            >
+              <el-button :loading="loading" size="small" type="primary">点击上传</el-button>
+            </el-upload>
+            <el-button type="info" size="mini" @click="imageLinkVisible = true">外链图片</el-button>
+          </div>
+        </div>
       </div>
 
       <el-tabs v-model="tabIndex" class="tab-card" tab-position="left" type="border-card">
-        <el-tab-pane label="最近使用" name="first">
-          <ImageManage :is-crop="isCrop" :crop-title="cropTitle" :fixed="fixed" :fixed-number="fixedNumber" @close="close" @selected="selected" />
+        <el-tab-pane label="最近使用" name="update">
+          <ImageManage :tab-index="tabIndex" :is-crop="isCrop" :crop-title="cropTitle" :fixed="fixed" :fixed-number="fixedNumber" @close="close" @selected="selected" />
         </el-tab-pane>
-        <el-tab-pane label="我的上传" name="second">
-          <ImageManage :is-crop="isCrop" :crop-title="cropTitle" :fixed="fixed" :fixed-number="fixedNumber" @close="close" @selected="selected" />
+        <el-tab-pane label="我的上传" name="create">
+          <ImageManage ref="uploadRef" :tab-index="tabIndex" :is-crop="isCrop" :crop-title="cropTitle" :fixed="fixed" :fixed-number="fixedNumber" @close="close" @selected="selected" />
         </el-tab-pane>
       </el-tabs>
+
+      <ImageLink :image-link-visible.sync="imageLinkVisible" />
 
     </el-dialog>
   </div>
@@ -24,11 +43,15 @@
 
 <script>
 import ImageManage from './image-manage'
+import ImageLink from './image-link'
+import { uploadUrl } from '@/api/media.js'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'ImageGallery',
   components: {
-    ImageManage
+    ImageManage,
+    ImageLink
   },
   props: {
     imageVisible: {
@@ -57,16 +80,36 @@ export default {
   },
   data() {
     return {
-      tabIndex: 'first'
+      uploadUrl,
+      headers: {
+        Authorization: getToken()
+      },
+      tabIndex: 'update',
+      loading: false,
+      imageLinkVisible: false
+
     }
   },
   methods: {
     close() {
       this.$emit('update:imageVisible', false)
     },
-    selected(url) {
-      this.$emit('selected', url)
+    selected(url, origin) {
+      this.$emit('selected', url, origin)
       this.close()
+    },
+    onSucess() {
+      if (this.tabIndex === 'create') {
+        this.$refs.uploadRef.fetchData()
+      } else {
+        this.tabIndex = 'create'
+      }
+    },
+    onError() {
+      this.$message.error('上传失败')
+    },
+    onChange() {
+      this.loading = !this.loading
     }
   }
 }
@@ -85,19 +128,19 @@ export default {
   }
 
   .dialog-title{
+    font-size: 22px;
     color: #000000;
     margin-right: 30px;
+  }
+
+  .upload-wrap{
+    margin-right: 10px;
   }
 
   .tab-card{
     height: 500px;
   }
 
-  .upload-image{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-  }
 }
 
 </style>

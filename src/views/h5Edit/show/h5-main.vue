@@ -4,7 +4,7 @@
     <MobileBorder>
       <template v-slot>
         <div class="main show-screen" :style="getBackground">
-          <ItemTemplate v-for="(item, index) in currentPageData.item" :key="item.id" :item="item" :show-index="index" />
+          <ItemTemplate v-for="(item, index) in currentPageData.items" :key="item.id" :item="item" :show-index="index" />
         </div>
       </template>
     </MobileBorder>
@@ -33,8 +33,8 @@ export default {
   computed: {
     ...mapGetters(['currentPageData']),
     getBackground() {
-      if (this.currentPageData.background.image) {
-        return 'background: url(' + this.currentPageData.background.image + ') center center / cover no-repeat;'
+      if (this.currentPageData.background.image.crop) {
+        return 'background: url(' + this.currentPageData.background.image.crop + ') center center / cover no-repeat;'
       } else {
         return 'background: ' + this.currentPageData.background.color
       }

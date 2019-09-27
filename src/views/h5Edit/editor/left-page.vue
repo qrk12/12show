@@ -50,7 +50,6 @@ export default {
       const newPage = {
         pageId: this.timeStamp(),
         title: '新建页面',
-        item: [],
         // 这一页的背景图片
         background: {
           image: '',
@@ -59,7 +58,8 @@ export default {
         music: {
           url: '',
           name: ''
-        }
+        },
+        items: []
       }
       if (index === null) {
         this.h5Json.pages.push(newPage)

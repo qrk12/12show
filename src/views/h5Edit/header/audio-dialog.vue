@@ -4,23 +4,39 @@
     <el-dialog :visible.sync="audioVisible" width="1000px" :before-close="close">
 
       <div slot="title">
-
-        <span class="dialog-title">音乐库</span>
-        <el-button type="primary" size="mini">点击上传</el-button>
-        <el-button type="info" size="mini">外链音乐</el-button>
-
-        <AudioPlay @close="close" />
+        <div class="flex">
+          <div class="dialog-title">音乐库</div>
+          <div class="flex">
+            <el-upload
+              class="upload-wrap"
+              :action="uploadUrl"
+              :headers="headers"
+              :data="{type:'audio'}"
+              :on-success="onSucess"
+              :on-error="onError"
+              :show-file-list="false"
+              :on-change="onChange"
+              accept=".mp3,.3gpp,.ogg,.au"
+              multiple
+            >
+              <el-button :loading="loading" size="small" type="primary">点击上传</el-button>
+            </el-upload>
+            <el-button type="info" size="mini" @click="audioLinkVisible = true">外链图片</el-button>
+            <AudioPlay @close="close" />
+          </div>
+        </div>
       </div>
 
       <el-tabs v-model="tabIndex" class="tab-card" tab-position="left" type="border-card">
-        <el-tab-pane label="最近使用" name="first">
-          <AudioManage @close="close" />
+        <el-tab-pane label="最近使用" name="update">
+          <AudioManage :tab-index="tabIndex" @close="close" />
         </el-tab-pane>
-        <el-tab-pane label="我的上传" name="second">
-          <AudioManage @close="close" />
+        <el-tab-pane label="我的上传" name="create">
+          <AudioManage :tab-index="tabIndex" @close="close" />
         </el-tab-pane>
       </el-tabs>
 
+      <AudioLink :audio-link-visible.sync="audioLinkVisible" />
     </el-dialog>
   </div>
 </template>
@@ -28,13 +44,17 @@
 <script>
 import AudioManage from './audio-manage'
 import AudioPlay from './audio-play'
+import AudioLink from './audio-link'
 import { mapMutations, mapGetters } from 'vuex'
+import { uploadUrl } from '@/api/media.js'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'ImageDialog',
   components: {
     AudioManage,
-    AudioPlay
+    AudioPlay,
+    AudioLink
   },
   props: {
     audioVisible: {
@@ -44,7 +64,13 @@ export default {
   },
   data() {
     return {
-      tabIndex: 'first'
+      uploadUrl,
+      headers: {
+        Authorization: getToken()
+      },
+      loading: false,
+      tabIndex: 'update',
+      audioLinkVisible: false
     }
   },
   computed: {
@@ -67,6 +93,19 @@ export default {
     close() {
       this['audio/onPause']()
       this.$emit('update:audioVisible', false)
+    },
+    onSucess() {
+      if (this.tabIndex === 'create') {
+        this.$refs.uploadRef.fetchData()
+      } else {
+        this.tabIndex = 'create'
+      }
+    },
+    onError() {
+      this.$message.error('上传失败')
+    },
+    onChange() {
+      this.loading = !this.loading
     }
 
   }
@@ -86,6 +125,7 @@ export default {
   }
 
   .dialog-title{
+    font-size: 22px;
     color: #000000;
     margin-right: 30px;
   }
@@ -94,10 +134,8 @@ export default {
     height: 500px;
   }
 
-  .upload-image{
-    position: absolute;
-    bottom: 0;
-    left: 0;
+  .upload-wrap{
+    margin-right: 10px;
   }
 
   .audio-controls{

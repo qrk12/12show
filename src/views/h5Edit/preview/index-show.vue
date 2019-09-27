@@ -8,7 +8,7 @@
 
           <div v-if="show" class="show-screen" :style="getBackground(itemPage.background)">
 
-            <ItemTemplate v-for="(item, index) in itemPage.item" :key="item.id" :item="item" :show-index="index" />
+            <ItemTemplate v-for="(item, index) in itemPage.items" :key="item.id" :item="item" :show-index="index" />
 
           </div>
 
@@ -69,7 +69,7 @@ export default {
   methods: {
     getBackground(background) {
       if (background.image) {
-        return 'background: url(' + background.image + ') center center / cover no-repeat;'
+        return 'background: url(' + background.image.crop + ') center center / cover no-repeat;'
       } else {
         return 'background: ' + background.color
       }
@@ -168,7 +168,7 @@ export default {
 
   .arrow-up{
     position: absolute;
-    z-index: 999;
+    z-index: 2001;
     top: 455px;
     left: 140px;
     font-size: 24px;
@@ -178,7 +178,7 @@ export default {
   }
   .music-icon{
     position: absolute;
-    z-index: 999;
+    z-index: 2001;
     top: 20px;
     left: 270px;
     font-size: 24px;

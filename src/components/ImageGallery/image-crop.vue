@@ -24,6 +24,7 @@
 
 <script>
 import { VueCropper } from 'vue-cropper'
+import { uploadMedia } from '@/api/media.js'
 
 export default {
   name: 'ImageCrop',
@@ -43,10 +44,12 @@ export default {
       type: String,
       default: ''
     },
+    // 是否开启截图框宽高固定比例
     fixed: {
       type: Boolean,
       default: true
     },
+    // 截图框的宽高比例
     fixedNumber: {
       type: Array,
       default() {
@@ -59,11 +62,16 @@ export default {
       this.$emit('update:cropImgVisible', false)
     },
     onConfirm() {
-      // 获取截图的base64 数据
-      this.$refs.cropper.getCropData((data) => {
-        // console.log(data)
-        this.$emit('selected', data)
-        this.close()
+      // 获取截图的blob数据
+      this.$refs.cropper.getCropBlob(async(data) => {
+        try {
+          // 上传截图
+          const upload = await uploadMedia('crop', data)
+          this.$emit('selected', upload.path, this.contentSrc)
+          this.close()
+        } catch (err) {
+          this.$message.error('上传失败')
+        }
       })
     }
   }

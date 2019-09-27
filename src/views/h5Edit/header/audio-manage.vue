@@ -1,100 +1,76 @@
 <template>
   <div class="audio-manage">
-
     <div class="audio-button">
-      <el-button v-if="manageState" class="el-icon-delete" type="danger" size="mini">删除</el-button>
-      <el-button v-if="manageState" class="el-icon-close" type="warning" size="mini" @click="onClear()">清空</el-button>
-      <el-button class="el-icon-back" type="primary" size="mini" @click="manageState = !manageState">管理</el-button>
+      <el-button v-if="manageState" class="el-icon-delete" type="danger" size="mini" @click="onDelete">删除</el-button>
+      <el-button
+        v-if="manageState"
+        class="el-icon-close"
+        type="warning"
+        size="mini"
+        @click="onClear()"
+      >清空</el-button>
+      <el-button
+        class="el-icon-back"
+        type="primary"
+        size="mini"
+        @click="manageState = !manageState"
+      >管理</el-button>
     </div>
 
     <div class="audio-content">
-
       <el-row>
-
-        <el-col v-for="(item, index) in list" :key="index" :class="{'audio-item':true, 'active': item.selected}" :span="12">
+        <el-col
+          v-for="(item, index) in audioList"
+          :key="item.mid"
+          :class="{'audio-item':true, 'active': item.selected === true}"
+          :span="12"
+        >
           <div class="flex-space-between" @click="onPlay(index)">
             <span class="cursor-default">{{ item.name }}</span>
-
             <i v-if="index === playIndex && playing" class="el-icon-video-pause icon" />
             <i v-else class="el-icon-video-play icon" />
           </div>
         </el-col>
-
       </el-row>
-
     </div>
 
     <el-pagination
       class="pagination"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
+      :page-size="18"
+      layout="total, prev, pager, next, jumper"
+      :total="total"
+      :current-page.sync="form.page"
+      @current-change="fetchData"
     />
-
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import mixin from '@/mixins/mixin.js'
+import { listMedia, deleteMedia } from '@/api/media.js'
 
 export default {
   name: 'AudioManage',
   mixins: [mixin],
-
+  props: {
+    tabIndex: {
+      type: String,
+      default: 'update'
+    }
+  },
   data() {
     return {
       manageState: false,
       playIndex: null,
-      list: [
-        {
-          name: '辜负.mp3',
-          url: 'http://mp3.9ku.com/m4a/186947.m4a',
-          selected: false
-        },
-        {
-          name: '打破沉默.mp3',
-          url: 'http://mp3.9ku.com/m4a/465288.m4a',
-          selected: false
-        },
-        {
-          name: '两只蝴蝶.mp3',
-          url: 'https://96.f.1ting.com/5d543594/77ea742207bc388f85836ee756bc8d02/zzfuck006/2006Jan/16f_Sammy/8.mp3',
-          selected: false
-        },
-        {
-          name: '传奇.mp3',
-          url: 'https://96.f.1ting.com/5d5435b4/c049e38bcd33c62d1684f41c8c441906/zzzzzmp3/2010kNov/07X/08a_Faye/09.mp3',
-          selected: false
-        },
-        {
-          name: '阳恭喜 - 少年锦时（Cover 赵雷）',
-          url: '/assets阳恭喜 - 少年锦时（Cover 赵雷）.mp3',
-          selected: false
-        },
-        {
-          name: '阳恭喜 - 少年锦时（Cover 赵雷）',
-          url: '/assets阳恭喜 - 少年锦时（Cover 赵雷）.mp3',
-          selected: false
-        },
-        {
-          name: '阳恭喜 - 少年锦时（Cover 赵雷）',
-          url: '/assets阳恭喜 - 少年锦时（Cover 赵雷）.mp3',
-          selected: false
-        },
-        {
-          name: '阳恭喜 - 少年锦时（Cover 赵雷）',
-          url: '/assets阳恭喜 - 少年锦时（Cover 赵雷）.mp3',
-          selected: false
-        },
-        {
-          name: '阳恭喜 - 少年锦时（Cover 赵雷）',
-          url: '/assets阳恭喜 - 少年锦时（Cover 赵雷）.mp3',
-          selected: false
-        }
-
-      ]
+      form: {
+        type: 'audio',
+        page: 1,
+        per_page: 18,
+        sort: 'create'
+      },
+      audioList: [],
+      total: 18
     }
   },
   computed: {
@@ -103,23 +79,40 @@ export default {
     }),
     ...mapGetters(['currentPageData', 'currentItemData'])
   },
+  watch: {
+    tabIndex(val) {
+      this.form.sort = val
+      this.fetchData()
+    }
+  },
+  created() {
+    this.fetchData()
+  },
   methods: {
-    ...mapMutations([
-      'audio/onPlay',
-      'audio/onPause',
-      'audio/setMusic'
-    ]),
+    ...mapMutations(['audio/onPlay', 'audio/onPause', 'audio/setMusic']),
     closeDialog() {
       this.$emit('close', false)
     },
+    fetchData() {
+      listMedia(this.form).then(res => {
+        // 加入选择的参数
+        res.data.forEach(item => {
+          item.selected = false
+        })
+        this.audioList = res.data
+        this.total = res.total
+      })
+    },
+    // 清空选择
     onClear() {
-      this.list.forEach(item => {
+      this.audioList.forEach(item => {
         item.selected = false
       })
     },
     onPlay(index) {
+      console.log('play')
       if (this.manageState) {
-        this.list[index].selected = true
+        this.audioList[index].selected = !this.audioList[index].selected
       } else if (index === this.playIndex) {
         if (this.playing) {
           this['audio/onPause']()
@@ -128,57 +121,74 @@ export default {
         }
       } else {
         this.onClear()
-        this.list[index].selected = true
+        this.audioList[index].selected = true
         this.playIndex = index
-        this['audio/setMusic'](this.list[index])
+        this['audio/setMusic'](this.audioList[index])
       }
+    },
+    onDelete() {
+      this.$confirm('是否真的删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.audioList.forEach(async(item, index) => {
+          if (item.selected === true) {
+            try {
+              await deleteMedia(item.mid)
+              this.audioList.splice(index, 1)
+            } catch (error) {
+              console.log(error)
+            }
+          }
+        })
+      }).catch(() => {
+        console.log('cancle')
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.audio-manage{
+.audio-manage {
+  .audio-item {
+    padding-right: 40px;
+    margin-top: 10px;
+    padding: 5px 20px;
+    border-bottom: 1px solid #ebeef5;
 
-    .audio-item{
-        padding-right: 40px;
-        margin-top: 10px;
-        padding: 5px 20px;
-        border-bottom: 1px solid #EBEEF5;
-
-        &:hover{
-          background: #EBEEF5;
-          border-radius: 20px;
-        }
-
-        &.active{
-          background: #EBEEF5;
-          border-radius: 20px;
-        }
+    &:hover {
+      background: #ebeef5;
+      border-radius: 20px;
     }
 
-    .icon{
-      font-size: 18px;
+    &.active {
+      background: #ebeef5;
+      border-radius: 20px;
     }
+  }
 
-    .select-sign{
-        width: 115px;
-        height: 115px;
-        position: absolute;
-        top: 0px;
-        left: 1px;
-        background-color: rgba(0,0,0,0.65);
-    }
+  .icon {
+    font-size: 18px;
+  }
 
-    .audio-content{
-        height: 410px;
-    }
+  .select-sign {
+    width: 115px;
+    height: 115px;
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    background-color: rgba(0, 0, 0, 0.65);
+  }
 
-    .audio-button{
-        display: flex;
-        justify-content: flex-end;
-    }
+  .audio-content {
+    height: 410px;
+  }
 
+  .audio-button {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
-
 </style>

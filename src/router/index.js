@@ -1,19 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import App from '@/App.vue'
+// import App from '@/App.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'home',
-      redirect: '/h5Edit',
-      component: App
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login/login.vue')
     },
     {
-      path: '/h5Edit',
+      path: '/home',
+      name: 'home',
+      component: () => import('@/views/home/home.vue')
+    },
+    {
+      path: '/h5Edit/:id',
       name: 'h5Edit',
       component: () => import('@/views/h5Edit/index.vue')
     },

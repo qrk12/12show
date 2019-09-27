@@ -8,6 +8,7 @@ import 'animate.css'
 import '@/styles/index.scss'
 
 import '@/icons' // icon
+import '@/permission' // permission control
 
 Vue.config.productionTip = false
 

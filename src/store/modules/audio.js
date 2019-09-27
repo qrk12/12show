@@ -6,10 +6,7 @@ export default {
     play: 0,
     pause: 0,
     playing: false,
-    music: {
-      name: '',
-      url: ''
-    }
+    music: {}
   },
 
   mutations: {

@@ -11,9 +11,9 @@
         @click="imageVisible = true"
       >
         <el-image
-          v-if="currentPageData.background.image"
+          v-if="currentPageData.background.image.crop"
           style="width: 326px; height: 200px"
-          :src="currentPageData.background.image"
+          :src="currentPageData.background.image.crop"
           fit="contain"
         />
         <i v-else class="el-icon-plus icon" />
@@ -40,7 +40,7 @@
     </el-form>
 
     <ImageGallery :image-visible.sync="imageVisible" :is-crop="true" :fixed-number="[2,3]" @selected="onSelected" />
-    <ImageCrop :crop-img-visible.sync="cropImgVisible" :content-src="currentPageData.background.image" :fixed-number="[2,3]" @selected="onSelected" />
+    <ImageCrop :crop-img-visible.sync="cropImgVisible" :content-src="currentPageData.background.image.origin" :fixed-number="[2,3]" @selected="onSelected" />
   </div>
 </template>
 
@@ -65,26 +65,29 @@ export default {
     ...mapGetters(['currentPageData'])
   },
   watch: {
-    'currentPageData.background.image'(newValue) {
+    'currentPageData.background.image.crop'(newValue) {
       if (newValue) {
         this.currentPageData.background.color = ''
       }
     },
     'currentPageData.background.color'(newValue) {
       if (newValue) {
-        this.currentPageData.background.image = ''
+        this.currentPageData.background.image.crop = ''
+        this.currentPageData.background.image.origin = ''
       }
     }
   },
   methods: {
     onDelete() {
-      this.currentPageData.background.image = ''
+      this.currentPageData.background.image.crop = ''
+      this.currentPageData.background.image.origin = ''
     },
     onReset(type) {
       this.currentPageData.background[type] = ''
     },
-    onSelected(url) {
-      this.currentPageData.background.image = url
+    onSelected(url, origin) {
+      this.currentPageData.background.image.crop = url
+      this.currentPageData.background.image.origin = origin
     }
   }
 

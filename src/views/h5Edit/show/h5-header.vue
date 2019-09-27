@@ -2,17 +2,15 @@
   <div class="header background-main-color">
     <el-row>
       <el-col :span="8">
-        <div>
-          <span class="text">h5 Page</span>
-          <svg-icon icon-class="eye" />
-
+        <div class="brand">
+          12Show
         </div>
       </el-col>
       <el-col :span="8">
 
         <el-menu
           :default-active="navActive"
-          class="el-menu-demo"
+          class="flex-center"
           mode="horizontal"
           background-color="#304156"
           text-color="#fff"
@@ -35,9 +33,11 @@
 
       </el-col>
       <el-col :span="8">
-        <div class="flex-row-reverse">
-          <span class="text" @click="onSetting()">预览和设置</span>
-          <span class="text">保存</span>
+        <div class="right-button">
+          <!-- <span class="text" @click="onSetting()">预览和设置</span> -->
+          <!-- <span class="text" @click="onSave()">保存</span> -->
+          <el-button type="default" size="mini" @click="onSave()">保存</el-button>
+          <el-button :loading="loading" type="default" size="mini" @click="onSetting()">预览和设置</el-button>
         </div>
       </el-col>
     </el-row>
@@ -49,7 +49,7 @@
 
 <script>
 import mixin from '@/mixins/mixin.js'
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState, mapActions } from 'vuex'
 import ImageGallery from '@/components/ImageGallery'
 import AudioDialog from '../header/audio-dialog'
 
@@ -65,7 +65,8 @@ export default {
       isCrop: false,
       imageVisible: false,
       audioVisible: false,
-      navActive: null
+      navActive: null,
+      loading: false
     }
   },
   computed: {
@@ -75,25 +76,28 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setting/onSetting'
+      'setting/onSetting',
+      'addItem'
     ]),
+    ...mapActions(['updateWorks']),
     addText() {
       const item = this.deepCopy(this.defaultItem)
       item.id = this.timeStamp()
       item.type = 'text'
       item.content = '编辑的文本'
-      const zIndex = this.currentPageData.item.length
+      const zIndex = this.currentPageData.items.length
       item.positionSize.zIndex = zIndex + 1
-      this.currentPageData.item.push(item)
+      this.addItem(item)
     },
     onImageGallery(isCrop) {
       this.isCrop = isCrop
       this.imageVisible = true
     },
-    onAddimage(url) {
+    onAddimage(url, origin) {
       if (this.isCrop) {
         // 添加背景
-        this.currentPageData.background.image = url
+        this.currentPageData.background.image.crop = url
+        this.currentPageData.background.image.origin = origin
       } else {
         // 添加元素背景
         this.addImage(url)
@@ -132,7 +136,7 @@ export default {
       const item = this.deepCopy(this.defaultItem)
       item.id = this.timeStamp()
       item.type = 'img'
-      const zIndex = this.currentPageData.item.length
+      const zIndex = this.currentPageData.items.length
       item.positionSize.zIndex = zIndex + 1
 
       item.content = url
@@ -140,7 +144,16 @@ export default {
       const imgSize = this.hangleImgSize(url)
       item.positionSize.width = imgSize.width
       item.positionSize.height = imgSize.height
-      this.currentPageData.item.push(item)
+      this.addItem(item)
+    },
+    onSave() {
+      this.loading = true
+      this.updateWorks().then(res => {
+        this.loading = false
+      })
+        .catch(() => {
+          this.$message.error('更新失败')
+        })
     }
   }
 }
@@ -148,14 +161,26 @@ export default {
 
 <style lang="scss" scoped>
 .header{
-    height: 60x;
+    height: 60px;
     color: rgb(191, 203, 217);
     overflow: hidden;
 
-    .text{
-      line-height: 60px;
+    // .text{
+    //   line-height: 60px;
+    //   margin: 0 10px;
+    //   cursor: default;
+    // }
+    .brand{
       margin: 0 10px;
-      cursor: default;
+      font-size: 24px;
+      color: #ffffff;
+      line-height: 60px;
+    }
+
+    .right-button{
+      text-align: right;
+      margin-top: 15px;
+      margin-right: 10px;
     }
 }
 </style>
