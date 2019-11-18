@@ -7,6 +7,11 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/',
+      name: 'index',
+      component: () => import('@/views/index/index.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/login/login.vue')
@@ -17,9 +22,9 @@ export default new Router({
       component: () => import('@/views/home/home.vue')
     },
     {
-      path: '/h5Edit/:id',
+      path: '/h5-edit/:id',
       name: 'h5Edit',
-      component: () => import('@/views/h5Edit/index.vue')
+      component: () => import('@/views/h5-edit/index.vue')
     },
     {
       path: '/test',

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 上传的URL
-export const uploadUrl = process.env.VUE_APP_BASE_API + '/media'
+export const uploadUrl = process.env.VUE_APP_BASE_API + '/admin/media'
 
 /**
  * 上传媒体文件
@@ -10,7 +10,7 @@ export const uploadUrl = process.env.VUE_APP_BASE_API + '/media'
  */
 export function uploadMedia(type, file) {
   return request({
-    url: '/media',
+    url: '/admin/media',
     method: 'post',
     data: {
       type,
@@ -26,7 +26,7 @@ export function uploadMedia(type, file) {
  */
 export function createMedia(data) {
   return request({
-    url: '/media',
+    url: '/admin/media',
     method: 'post',
     data
   })
@@ -38,7 +38,7 @@ export function createMedia(data) {
  */
 export function listMedia(params) {
   return request({
-    url: '/media',
+    url: '/admin/media',
     method: 'get',
     params
   })
@@ -50,7 +50,7 @@ export function listMedia(params) {
  */
 export function updateMeida(id) {
   return request({
-    url: '/media/' + id,
+    url: '/admin/media/' + id,
     method: 'put'
   })
 }
@@ -61,7 +61,7 @@ export function updateMeida(id) {
  */
 export function deleteMedia(id) {
   return request({
-    url: '/media/' + id,
+    url: '/admin/media/' + id,
     method: 'delete'
   })
 }

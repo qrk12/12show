@@ -7,20 +7,7 @@
         <div class="flex">
           <div class="dialog-title">图片库</div>
           <div class="flex">
-            <el-upload
-              class="upload-wrap"
-              :action="uploadUrl"
-              :headers="headers"
-              :data="{type:'img'}"
-              :on-success="onSucess"
-              :on-error="onError"
-              :show-file-list="false"
-              :on-change="onChange"
-              accept=".jpg,.png,.gif"
-              multiple
-            >
-              <el-button :loading="loading" size="small" type="primary">点击上传</el-button>
-            </el-upload>
+            <el-button size="small" type="primary" @click="imageUploadVisible=true">点击上传</el-button>
             <el-button type="info" size="mini" @click="imageLinkVisible = true">外链图片</el-button>
           </div>
         </div>
@@ -36,6 +23,7 @@
       </el-tabs>
 
       <ImageLink :image-link-visible.sync="imageLinkVisible" />
+      <ImageUpload :image-upload-visible.sync="imageUploadVisible" @success="onUploadSuccess" />
 
     </el-dialog>
   </div>
@@ -44,14 +32,14 @@
 <script>
 import ImageManage from './image-manage'
 import ImageLink from './image-link'
-import { uploadUrl } from '@/api/media.js'
-import { getToken } from '@/utils/auth'
+import ImageUpload from './image-upload'
 
 export default {
   name: 'ImageGallery',
   components: {
     ImageManage,
-    ImageLink
+    ImageLink,
+    ImageUpload
   },
   props: {
     imageVisible: {
@@ -80,14 +68,9 @@ export default {
   },
   data() {
     return {
-      uploadUrl,
-      headers: {
-        Authorization: getToken()
-      },
       tabIndex: 'update',
-      loading: false,
-      imageLinkVisible: false
-
+      imageLinkVisible: false,
+      imageUploadVisible: false
     }
   },
   methods: {
@@ -98,19 +81,14 @@ export default {
       this.$emit('selected', url, origin)
       this.close()
     },
-    onSucess() {
+    onUploadSuccess() {
       if (this.tabIndex === 'create') {
         this.$refs.uploadRef.fetchData()
       } else {
         this.tabIndex = 'create'
       }
-    },
-    onError() {
-      this.$message.error('上传失败')
-    },
-    onChange() {
-      this.loading = !this.loading
     }
+
   }
 }
 </script>
@@ -124,7 +102,7 @@ export default {
 
   .el-dialog__body{
     padding: 0px;
-    height: 500px;
+    height: 550px;
   }
 
   .dialog-title{
@@ -138,7 +116,7 @@ export default {
   }
 
   .tab-card{
-    height: 500px;
+    height: 550px;
   }
 
 }

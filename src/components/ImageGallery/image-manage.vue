@@ -1,17 +1,14 @@
 <template>
   <div class="image-manage">
-
     <div class="manage-button">
-      <el-button v-if="manageState" class="el-icon-delete" type="danger" size="mini" @click="onDelete()">删除</el-button>
-      <el-button v-if="manageState" class="el-icon-close" type="warning" size="mini" @click="onClear()">清空</el-button>
-      <el-button class="el-icon-back" type="primary" size="mini" @click="manageState = !manageState">图片管理</el-button>
+      <el-checkbox label="全选" border size="mini" class="select-all" @change="onSelectAll" />
+      <el-button class="el-icon-delete" type="danger" size="mini" @click="onDelete('all')">删除</el-button>
     </div>
 
     <div class="image-content">
-
       <el-row :gutter="4">
-
         <el-col v-for="(item,index) in imgList" :key="item.mid" class="img-item" :span="4">
+
           <el-image
             ref="img"
             style="width: 115px; height: 115px"
@@ -20,12 +17,19 @@
             :preview-src-list="[item.path]"
           />
 
+          <div>
+            <el-checkbox v-model="item.selected" class="checkbox" />
+            <i class="el-icon-delete icon" @click="onDelete(index)" />
+          </div>
+
           <div class="hover flex-justify-align-center">
             <div>
               <div class="select">
-
-                <el-button v-if="!item.selected" type="primary" size="mini" @click="onSelect(item)">选择</el-button>
-                <el-button v-if="item.selected" type="primary" size="mini" @click="onSelect(item)">取消</el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="onSelect(item)"
+                >选择</el-button>
               </div>
               <div>
                 <el-button type="default" size="mini" @click="onPreview(index)">预览</el-button>
@@ -33,13 +37,8 @@
             </div>
           </div>
 
-          <div v-if="item.selected" class="select-sign flex-justify-align-center">
-            <i class="el-icon-check" style="font-size:36px; color:#ffffff;" />
-          </div>
         </el-col>
-
       </el-row>
-
     </div>
 
     <el-pagination
@@ -51,12 +50,18 @@
       @current-change="fetchData"
     />
 
-    <ImageCrop :crop-img-visible.sync="cropImgVisible" :content-src="contentSrc" :crop-title="cropTitle" :fixed="fixed" :fixed-number="fixedNumber" @selected="onSelected" />
+    <ImageCrop
+      :crop-img-visible.sync="cropImgVisible"
+      :content-src="contentSrc"
+      :crop-title="cropTitle"
+      :fixed="fixed"
+      :fixed-number="fixedNumber"
+      @selected="onSelected"
+    />
   </div>
 </template>
 
 <script>
-
 import mixin from '@/mixins/mixin.js'
 import ImageCrop from './image-crop'
 import { listMedia, updateMeida, deleteMedia } from '@/api/media.js'
@@ -100,7 +105,7 @@ export default {
         type: 'img',
         page: 1,
         per_page: 18,
-        sort: 'create'
+        sort: 'update'
       },
       imgList: [],
       total: 18
@@ -147,83 +152,105 @@ export default {
     },
     onPreview(index) {
       // 触发子组件的预览事件
+      console.log(this.$refs.img)
       this.$refs.img[index].clickHandler()
     },
     onSelected(url, origin) {
       this.$emit('selected', url, origin)
     },
-    onDelete() {
+    onDelete(index) {
+      console.log(index)
       this.$confirm('是否真的删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.imgList.forEach(async(item, index) => {
-          if (item.selected === true) {
-            try {
-              await deleteMedia(item.mid)
+        type: 'warning',
+        center: true
+      })
+        .then(async() => {
+          if (index !== 'all') {
+            deleteMedia(this.imgList[index].mid).then(() => {
               this.imgList.splice(index, 1)
-            } catch (error) {
-              console.log(error)
+            })
+          } else {
+            // 逆向循环删除
+            const len = this.imgList.length
+            for (let index = len - 1; index >= 0; index--) {
+              const item = this.imgList[index]
+              if (item.selected) {
+                await deleteMedia(item.mid)
+                this.imgList.splice(index, 1)
+              }
             }
           }
         })
-      }).catch(() => {
-        console.log('cancle')
+        .catch(() => {
+          console.log('cancle')
+        })
+    },
+    onSelectAll(isALl) {
+      this.imgList.forEach(item => {
+        item.selected = isALl
       })
     }
-
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.image-manage{
+<style lang="scss">
+.image-manage {
+  .img-item {
+    margin-top: 10px;
+    position: relative;
+  }
 
-    .img-item{
-        margin-top: 10px;
-        position: relative;
+  .img-item:hover {
+    .hover {
+      display: flex;
     }
+  }
 
-    .img-item:hover{
-        .hover{
-            display: flex;
-        }
+  .hover {
+    display: none;
+    width: 115px;
+    height: 115px;
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.65);
+
+    .select {
+      margin-bottom: 10px;
     }
+  }
 
-    .hover{
-        display: none;
-        width: 115px;
-        height: 115px;
-        position: absolute;
-        top: 0px;
-        left: 1px;
-        z-index: 10;
-        background-color: rgba(0,0,0,0.65);
-
-        .select{
-            margin-bottom: 10px;
-        }
+  .image-content {
+    // height: 410px;
+    .icon{
+      font-size: 16px;
+      margin-left: 10px;
     }
+    .checkbox{
+      margin-left: 40px;
 
-    .select-sign{
-        width: 115px;
-        height: 115px;
-        position: absolute;
-        top: 0px;
-        left: 1px;
-        background-color: rgba(0,0,0,0.65);
     }
+  }
 
-    .image-content{
-        height: 410px;
+  .manage-button {
+    display: flex;
+    justify-content: flex-end;
+
+    .select-all {
+      margin-right: 10px;
     }
+  }
 
-    .manage-button{
-        display: flex;
-        justify-content: flex-end;
-    }
+  .pagination{
+    margin-top: 20px;
+  }
 
+  .el-checkbox__inner{
+    border: 1px solid #606266;
+  }
 }
-
 </style>

@@ -16,53 +16,61 @@
               active-text-color="#409EFF"
               @select="handleSelect"
             >
-              <el-menu-item index="1">模版市场</el-menu-item>
-              <el-menu-item index="2">我的模版</el-menu-item>
-              <el-menu-item index="3">新建场景</el-menu-item>
+              <el-menu-item index="works">我的作品</el-menu-item>
+              <el-menu-item index="newScene">新建场景</el-menu-item>
             </el-menu>
           </el-col>
         </el-row>
 
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>
+
+        <WorksTemplate v-if="activeIndex === 'works'" />
+
+      </el-main>
       <el-footer class="background-main-color">
         <div class="footer">
           copyright 12show
         </div>
       </el-footer>
     </el-container>
+
   </div>
 </template>
 
 <script>
-import { create } from '@/api/works'
-import { mapState } from 'vuex'
+import { createWorks } from '@/api/works'
+import WorksTemplate from './components/works-template'
+import { initJson } from '@/utils/data.js'
 
 export default {
+  components: {
+    WorksTemplate
+  },
   data() {
     return {
-      activeIndex: '1'
+      activeIndex: 'works'
     }
   },
-  computed: {
-    ...mapState(['initJson'])
-  },
+
   methods: {
     handleSelect(key) {
-      if (key === '3') {
-        this.createWorks()
+      if (key === 'newScene') {
+        this.onCreateWorks()
       } else {
-        this.$router.push('/home')
+        this.activeIndex = key
       }
     },
-    createWorks() {
+    // 新建一个作品
+    onCreateWorks() {
       const form = {
-        content: JSON.stringify(this.initJson)
+        title: '默认标题',
+        description: '默认描述',
+        draft: JSON.stringify(initJson)
       }
-      create(form).then(res => {
-        // this.setH5Json(this.initJson)
+      createWorks(form).then(res => {
         this.$router.push({
-          path: `/h5Edit/${res.wid}`
+          path: `/h5-edit/${res.wid}`
         })
       })
         .catch(e => {

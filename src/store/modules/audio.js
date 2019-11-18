@@ -3,10 +3,14 @@ export default {
   namespaced: true,
 
   state: {
+    audioVisible: false,
     play: 0,
     pause: 0,
     playing: false,
-    music: {}
+    music: {
+      path: null,
+      name: null
+    }
   },
 
   mutations: {
@@ -20,6 +24,9 @@ export default {
     },
     setMusic(state, music) {
       state.music = music
+    },
+    setAudioVisible(state, status) {
+      state.audioVisible = status
     }
   }
 }

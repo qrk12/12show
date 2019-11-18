@@ -5,6 +5,7 @@ import app from './modules/app.js'
 import audio from './modules/audio.js'
 import setting from './modules/setting.js'
 import user from './modules/user.js'
+import history from './modules/history.js'
 
 Vue.use(Vuex)
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
   modules: {
     audio,
     setting,
-    user
+    user,
+    history
   }
 })

@@ -11,7 +11,7 @@ service.interceptors.request.use(
   config => {
     config.headers['Authorization'] = getToken()
     config.validateStatus = function(status) {
-      return status < 500 // 报错拦截的状态吗
+      return status < 500 // 不拦截的状态码
     }
 
     if (config.data && config.data.isUpload) {

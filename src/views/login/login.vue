@@ -41,7 +41,7 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { type: 'string', min: 8, max: 30, message: '密码不在有效范围内', trigger: 'blur' }
+          { type: 'string', min: 8, max: 30, message: '密码错误', trigger: 'blur' }
 
         ]
       }
