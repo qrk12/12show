@@ -8,7 +8,7 @@
 
           <div v-if="show" class="show-screen" :style="getBackground(itemPage.background)">
 
-            <ItemTemplate v-for="(item, index) in itemPage.items" :key="item.id" :item="item" :show-index="index" />
+            <ItemTemplate v-for="(item, index) in itemPage.items" :key="item.id" :item="item" :show-index="index" @jumpPage="jumpPage" />
 
           </div>
 
@@ -162,6 +162,9 @@ export default {
     audioPause() {
       this.$refs.audio.pause()
       this.audioPlaying = false
+    },
+    jumpPage(index) {
+      this.activeIndex = index
     }
   }
 }

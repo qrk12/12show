@@ -22,6 +22,11 @@
         <i class="el-icon-document-copy icon" :class="{active: clipboard.length !== 0}" />
       </el-tooltip>
     </div>
+    <div class="item" @mousedown.stop="onSetLink">
+      <el-tooltip effect="dark" content="链接" placement="right">
+        <i class="el-icon-link icon" :class="{active: activeItem !== null}" />
+      </el-tooltip>
+    </div>
     <div class="item" @mousedown.stop="setZindex(1)">
       <el-tooltip effect="dark" content="上移" placement="right">
         <i class="el-icon-top icon" :class="{active: activeItem !== null}" />
@@ -53,10 +58,10 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
-
 import mixin from '@/mixins/mixin.js'
 
 export default {
+
   mixins: [mixin],
   props: {
     frameSelect: {
@@ -68,6 +73,7 @@ export default {
   },
   data() {
     return {
+      jumpLinkVisible: false,
       // 剪贴板
       clipboard: [],
       // 是否框选
@@ -100,7 +106,9 @@ export default {
       'audio/setAudioVisible',
       'addItem',
       'onRevoke',
-      'onRecover'
+      'onRecover',
+      'addHistory',
+      'setting/setLink'
     ]),
     setZindex(type) {
     //   console.log(type)
@@ -145,6 +153,8 @@ export default {
 
         this.setActiveItem(itemsLenth - 1)
       }
+
+      this.addHistory()
     },
     onDelete() {
       if (this.isFrameSelect) {
@@ -166,9 +176,13 @@ export default {
             this.currentPageData.items.splice(item, 1)
           }
         }
+
+        this.addHistory()
       } else if (this.activeItem !== null) {
         this.currentPageData.items.splice(this.activeItem, 1)
         this.setActiveItem(null)
+
+        this.addHistory()
       }
     },
     onCopy() {
@@ -204,10 +218,16 @@ export default {
         element.positionSize.top += 20
         element = this.deepCopy(element)
         this.addItem(element)
+        this.addHistory()
       }
     },
     onMusic() {
       this['audio/setAudioVisible'](true)
+    },
+    onSetLink() {
+      if (this.activeItem !== null) {
+        this['setting/setLink']()
+      }
     }
   }
 }

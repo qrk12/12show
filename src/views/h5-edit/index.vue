@@ -120,8 +120,6 @@ export default {
 
 <style lang="scss" scoped>
 .main-container{
-  // position: relative;
-  // top: 10px;
   margin-top: 10px;
 }
 </style>

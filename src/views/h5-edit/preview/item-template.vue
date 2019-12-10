@@ -1,7 +1,13 @@
 <template>
   <div class="h5-item" :style="[itemJson.positionSize]">
 
-    <div v-if="item.type === 'text'" ref="item" class="show-item" :style="[itemJson.text, tempAnimate]">
+    <div
+      v-if="item.type === 'text'"
+      ref="item"
+      class="show-item"
+      :style="[itemJson.text, tempAnimate]"
+      @click="onJump(item)"
+    >
       {{ item.content }}
     </div>
 
@@ -13,6 +19,7 @@
       :height="itemJson.positionSize.height"
       :style="[itemJson.text, tempAnimate]"
       :src="item.content"
+      @click="onJump(item)"
     >
 
   </div>
@@ -120,6 +127,14 @@ export default {
           this.loopAnimate(index + 1, total)
         }
       }, delay * 1000)
+    },
+    // 跳转
+    onJump(item) {
+      if (item.link.isWebsite === true && item.link.url) {
+        window.open(item.link.url)
+      } else if (item.link.isWebsite === false && item.link.page > 0) {
+        this.$emit('jumpPage', item.link.page - 1)
+      }
     }
 
   }

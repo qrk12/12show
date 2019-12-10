@@ -19,9 +19,11 @@ export default {
     login({ commit }, loginForm) {
       return new Promise((resolve, reject) => {
         login(loginForm).then(res => {
-          commit('SET_TOKEN', res.token)
-          setToken(res.token)
-          resolve()
+          if (res.token) {
+            commit('SET_TOKEN', res.token)
+            setToken(res.token)
+            resolve()
+          }
         }).catch(error => {
           reject(error)
         })

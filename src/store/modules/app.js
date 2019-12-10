@@ -66,7 +66,7 @@ export default {
     },
     // 当前操作元素
     currentItemData: (state, getters) => {
-      if (state.activeItem) {
+      if (state.activeItem !== null) {
         return getters.currentPageData.items[state.activeItem]
       } else {
         return null
@@ -123,6 +123,7 @@ export default {
     addItem(state, payload) {
       const zIndex = state.h5Json.pages[state.activePage].items.length
       payload.positionSize.zIndex = zIndex + 1
+      console.log(payload)
       state.h5Json.pages[state.activePage].items.push(payload)
     },
     setActiveItem(state, index) {

@@ -52,6 +52,8 @@
 
     <AudioLibrary />
 
+    <JumpLink v-if="currentItemData" />
+
   </div>
 </template>
 
@@ -61,13 +63,15 @@ import mixinWorks from '../mixins/mixin.js'
 import { mapGetters, mapMutations, mapState, mapActions } from 'vuex'
 import ImageGallery from '@/components/ImageGallery'
 import AudioLibrary from '@/components/AudioLibrary'
+import JumpLink from '@/components/JumpLink/index.vue'
 import { defaultItem } from '@/utils/data.js'
 
 export default {
   name: 'H5Header',
   components: {
     ImageGallery,
-    AudioLibrary
+    AudioLibrary,
+    JumpLink
   },
   mixins: [mixin, mixinWorks],
   data() {
@@ -94,6 +98,7 @@ export default {
       item.id = this.timeStamp()
       item.type = 'text'
       item.content = '编辑的文本'
+
       this.addItem(item)
 
       this.addHistory()

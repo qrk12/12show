@@ -5,11 +5,11 @@
       <div class="title">12show</div>
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item class="form-item" prop="login">
-          <el-input v-model="form.login" placeholder="账号" />
+          <el-input v-model.trim="form.login" placeholder="账号" />
         </el-form-item>
 
         <el-form-item class="form-item" prop="password">
-          <el-input v-model="form.password" type="password" placeholder="密码" />
+          <el-input v-model.trim="form.password" type="password" placeholder="密码" />
         </el-form-item>
 
         <el-form-item class="form-item">
@@ -35,14 +35,10 @@ export default {
       },
       rules: {
         login: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          { type: 'string', min: 5, max: 16, message: '账号不在有效范围内', trigger: 'blur' }
-
+          { required: true, message: '请输入账号', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { type: 'string', min: 8, max: 30, message: '密码错误', trigger: 'blur' }
-
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ]
       }
     }

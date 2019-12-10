@@ -102,7 +102,13 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
                 animationIterationCount: 1,
                 isInfinite: false
               }
-            ]
+            ],
+            // 链接跳转
+            link:{
+              isWebsite: true,
+              url:'',
+              page: 0
+            }
           },
           {
             id: 2,

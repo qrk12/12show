@@ -15,7 +15,7 @@ export const defaultItem = {
     padding: 0,
     borderWidth: 0,
     borderRadius: 0,
-    borderColor: '#000',
+    borderColor: '#000000',
     borderStyle: 'solid',
     backgroundColor: '',
     opacity: 1,
@@ -37,7 +37,13 @@ export const defaultItem = {
     color: ''
   },
   // 动画类型
-  animate: []
+  animate: [],
+  // 链接跳转
+  link: {
+    isWebsite: false,
+    url: '',
+    page: null
+  }
 }
 
 // 初始json
