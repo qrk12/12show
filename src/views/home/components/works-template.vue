@@ -43,6 +43,7 @@ import { listWorks } from '@/api/works'
 import { createWorks, getWorks, deleteWorks } from '@/api/works'
 
 export default {
+  name: 'WorksTemplate',
   props: {
     activeIndex: {
       type: String,

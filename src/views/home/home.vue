@@ -4,7 +4,9 @@
       <el-header class="background-main-color">
         <el-row>
           <el-col :span="8">
-            <div class="brand">12Show</div>
+            <div class="brand" @click="goHome">
+              <svg-icon icon-class="logo" style="width:130px;height:70px;" />
+            </div>
           </el-col>
           <el-col :span="8">
             <el-menu
@@ -16,8 +18,19 @@
               active-text-color="#409EFF"
               @select="handleSelect"
             >
-              <el-menu-item index="works">我的作品</el-menu-item>
-              <el-menu-item index="newScene">新建场景</el-menu-item>
+              <el-menu-item index="WorksTemplate">我的作品</el-menu-item>
+              <el-menu-item index="newScene">新建作品</el-menu-item>
+              <el-submenu index="2-4">
+                <template slot="title">
+                  <el-badge is-dot class="badge" :hidden="isUpgrade !== 1">其他</el-badge>
+                </template>
+                <el-menu-item index="UpgradeCore">
+                  <el-badge is-dot class="badge" :hidden="isUpgrade !== 1">程序升级</el-badge>
+                </el-menu-item>
+                <el-menu-item index="UserPassword">修改密码</el-menu-item>
+                <el-menu-item index="signout">退出登录</el-menu-item>
+              </el-submenu>
+
             </el-menu>
           </el-col>
         </el-row>
@@ -25,12 +38,15 @@
       </el-header>
       <el-main>
 
-        <WorksTemplate v-if="activeIndex === 'works'" />
+        <component :is="activeIndex" />
 
       </el-main>
       <el-footer class="background-main-color">
         <div class="footer">
-          copyright 12show
+          copyright 12show 自由部署的H5制作程序
+
+          {{ currentVersion }}
+
         </div>
       </el-footer>
     </el-container>
@@ -40,23 +56,41 @@
 
 <script>
 import { createWorks } from '@/api/works'
-import WorksTemplate from './components/works-template'
 import { initJson } from '@/utils/data.js'
+import WorksTemplate from './components/works-template'
+import UserPassword from './components/user-password'
+import UpgradeCore from './components/upgrade-core'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   components: {
-    WorksTemplate
+    WorksTemplate,
+    UserPassword,
+    UpgradeCore
   },
   data() {
     return {
-      activeIndex: 'works'
+      activeIndex: 'WorksTemplate'
     }
+  },
+  computed: {
+    ...mapState({
+      isUpgrade: state => state.user.updateInfo.isUpgrade,
+      currentVersion: state => state.user.updateInfo.currentVersion
+    })
   },
 
   methods: {
+    ...mapActions(['user/frontLogOut']),
+
     handleSelect(key) {
+      console.log(key)
       if (key === 'newScene') {
         this.onCreateWorks()
+      } else if (key === 'signout') {
+        this['user/frontLogOut']().then(() => {
+          this.$router.push('/login')
+        })
       } else {
         this.activeIndex = key
       }
@@ -76,6 +110,11 @@ export default {
         .catch(e => {
           console.log(e)
         })
+    },
+    goHome() {
+      this.$router.push({
+        path: '/home'
+      })
     }
   }
 }
@@ -86,6 +125,11 @@ export default {
     font-size: 24px;
     color: #ffffff;
     line-height: 60px;
+    cursor: pointer;
+}
+
+.badge{
+  line-height: 2em;
 }
 
 .el-main{

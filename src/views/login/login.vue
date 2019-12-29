@@ -2,7 +2,9 @@
   <div class="login background-main-color">
 
     <div class="form">
-      <div class="title">12show</div>
+      <div class="title">
+        <svg-icon icon-class="logo" style="width:300px;height:70px;" />
+      </div>
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item class="form-item" prop="login">
           <el-input v-model.trim="form.login" placeholder="账号" />
@@ -44,11 +46,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['user/login']),
+    ...mapActions(['user/login', 'user/getInfo', 'user/upgrapde']),
     onSubmit() {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this['user/login'](this.form).then(res => {
+            this['user/getInfo']()
+            this['user/upgrapde']()
             this.$router.push('/home')
           })
         }

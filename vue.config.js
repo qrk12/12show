@@ -7,7 +7,7 @@ function resolve(dir) {
 
 module.exports = {
   publicPath: './',
-  outputDir: 'dist',
+  outputDir: '/Users/qin/work/php/laradock-test/12show/view',
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.

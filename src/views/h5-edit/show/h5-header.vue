@@ -2,8 +2,8 @@
   <div class="header background-main-color">
     <el-row>
       <el-col :span="8">
-        <div class="brand">
-          12Show
+        <div class="brand" @click="goHome">
+          <svg-icon icon-class="logo" style="width:130px;height:70px;" />
         </div>
       </el-col>
       <el-col :span="8">
@@ -161,6 +161,11 @@ export default {
     },
     onMusic() {
       this['audio/setAudioVisible'](true)
+    },
+    goHome() {
+      this.$router.push({
+        path: '/home'
+      })
     }
   }
 }
@@ -176,7 +181,7 @@ export default {
       margin: 0 10px;
       font-size: 24px;
       color: #ffffff;
-      line-height: 60px;
+      cursor: pointer;
     }
 
     .right-button{

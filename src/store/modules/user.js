@@ -1,11 +1,16 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login } from '@/api/login'
+import { getToken, setToken, removeToken, setInfo } from '@/utils/auth'
+import { login, info, signout } from '@/api/user'
+import { check } from '@/api/upgrade'
 
 export default {
   namespaced: true,
 
   state: {
-    token: getToken()
+    token: getToken(),
+    updateInfo: {
+      isUpgrade: 0,
+      currentVersion: ''
+    }
   },
 
   mutations: {
@@ -30,12 +35,36 @@ export default {
       })
     },
 
-    // 前端 登出
-    FedLogOut({ commit }) {
+    getInfo() {
+      return new Promise((resolve, reject) => {
+        info().then(res => {
+          console.log(res)
+          setInfo(res)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    upgrapde({ state }) {
+      return new Promise((resolve, reject) => {
+        check().then(res => {
+          state.updateInfo = res
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    // 登出
+    frontLogOut({ commit }) {
       return new Promise(resolve => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resolve()
+        signout().then(() => {
+          removeToken()
+          resolve()
+        })
       })
     }
   }
