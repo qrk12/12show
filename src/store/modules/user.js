@@ -6,7 +6,7 @@ export default {
   namespaced: true,
 
   state: {
-    token: getToken(),
+    UserToken: getToken(),
     updateInfo: {
       isUpgrade: 0,
       currentVersion: ''
@@ -14,8 +14,8 @@ export default {
   },
 
   mutations: {
-    SET_TOKEN: (state, token) => {
-      state.token = token
+    SET_TOKEN: (state, UserToken) => {
+      state.UserToken = UserToken
     }
   },
 
@@ -24,9 +24,9 @@ export default {
     login({ commit }, loginForm) {
       return new Promise((resolve, reject) => {
         login(loginForm).then(res => {
-          if (res.token) {
-            commit('SET_TOKEN', res.token)
-            setToken(res.token)
+          if (res.UserToken) {
+            commit('SET_TOKEN', res.UserToken)
+            setToken(res.UserToken)
             resolve()
           }
         }).catch(error => {

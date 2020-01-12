@@ -35,6 +35,7 @@
       class="pagination"
       :page-size="18"
       layout="total, prev, pager, next, jumper"
+      hide-on-single-page
       :total="total"
       :current-page.sync="form.page"
       @current-change="fetchData"
@@ -46,6 +47,7 @@
 import { mapState, mapMutations } from 'vuex'
 import mixin from '@/mixins/mixin.js'
 import { listMedia, deleteMedia } from '@/api/media.js'
+import { mediaPath } from '@/utils/validate.js'
 
 export default {
   mixins: [mixin],
@@ -70,7 +72,8 @@ export default {
   },
   computed: {
     ...mapState({
-      playing: state => state.audio.playing
+      playing: state => state.audio.playing,
+      music: state => state.audio.music
     })
   },
   watch: {
@@ -93,6 +96,7 @@ export default {
         // 加入选择的参数
         res.data.forEach(item => {
           item.selected = false
+          item.path = mediaPath(item.path)
         })
         this.audioList = res.data
         this.total = res.total
@@ -105,18 +109,19 @@ export default {
       })
     },
     onPlay(index) {
-      if (index === this.playIndex) {
-        if (this.playing) {
-          this['audio/onPause']()
-        } else {
-          this['audio/onPlay']()
-        }
-      } else {
+      const path = this.audioList[index].path
+      if (path !== this.music.path) {
         this.onClear()
         this.audioList[index].selected = true
         this.playIndex = index
         console.log(this.audioList[index])
         this['audio/setMusic'](this.audioList[index])
+      } else {
+        if (this.playing) {
+          this['audio/onPause']()
+        } else {
+          this['audio/onPlay']()
+        }
       }
     },
     onDelete(index) {

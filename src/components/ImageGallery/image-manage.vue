@@ -45,6 +45,7 @@
       class="pagination"
       :page-size="18"
       layout="total, prev, pager, next, jumper"
+      hide-on-single-page
       :total="total"
       :current-page.sync="form.page"
       @current-change="fetchData"
@@ -65,9 +66,9 @@
 import mixin from '@/mixins/mixin.js'
 import ImageCrop from './image-crop'
 import { listMedia, updateMeida, deleteMedia } from '@/api/media.js'
+import { mediaPath } from '@/utils/validate.js'
 
 export default {
-  name: 'ImageManage',
   components: {
     ImageCrop
   },
@@ -126,6 +127,7 @@ export default {
         // 加入选择的参数
         res.data.forEach(item => {
           item.selected = false
+          item.path = mediaPath(item.path)
         })
         this.imgList = res.data
         this.total = res.total

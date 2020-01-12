@@ -1,7 +1,7 @@
 <template>
   <div class="login background-main-color">
 
-    <div class="form">
+    <div class="form" @keyup.enter="onSubmit">
       <div class="title">
         <svg-icon icon-class="logo" style="width:300px;height:70px;" />
       </div>
@@ -15,7 +15,7 @@
         </el-form-item>
 
         <el-form-item class="form-item">
-          <el-button class="submit-button" type="primary" @click="onSubmit">登录</el-button>
+          <el-button class="submit-button" type="primary" :loading="loading" @click="onSubmit">登录</el-button>
         </el-form-item>
       </el-form>
 
@@ -25,8 +25,8 @@
 </template>
 
 <script>
-
 import { mapActions } from 'vuex'
+import setting from '@/setting.js'
 
 export default {
   data() {
@@ -42,18 +42,32 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' }
         ]
+      },
+      loading: false
+    }
+  },
+  created() {
+    if (setting.isDemo) {
+      this.form = {
+        login: 'admin',
+        password: 'admin'
       }
     }
   },
   methods: {
     ...mapActions(['user/login', 'user/getInfo', 'user/upgrapde']),
     onSubmit() {
+      console.log('enter')
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.loading = true
           this['user/login'](this.form).then(res => {
             this['user/getInfo']()
             this['user/upgrapde']()
+            this.loading = false
             this.$router.push('/home')
+          }).catch(() => {
+            this.loading = false
           })
         }
       })

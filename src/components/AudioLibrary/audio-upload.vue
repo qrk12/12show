@@ -40,7 +40,7 @@ export default {
     return {
       uploadUrl,
       headers: {
-        Authorization: getToken()
+        UserToken: getToken()
       }}
   },
   methods: {

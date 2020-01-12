@@ -8,13 +8,10 @@ function resolve(dir) {
 module.exports = {
   publicPath: './',
   outputDir: '/Users/qin/work/php/laradock-test/12show/view',
-  configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
-    resolve: {
-      alias: {
-        '@': resolve('src')
-      }
+  productionSourceMap: false,
+  configureWebpack: config => {
+    if (process.env.NODE_ENV !== 'development') {
+      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
     }
   },
   chainWebpack(config) {

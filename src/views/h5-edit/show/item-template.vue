@@ -28,7 +28,7 @@
         :width="itemJson.positionSize.width"
         :height="itemJson.positionSize.height"
         :style="[itemJson.text, tempAnimate]"
-        :src="item.content"
+        :src="item.content | handleImg"
       >
     </VueDragResize>
 

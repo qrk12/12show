@@ -36,10 +36,10 @@
         <div class="right-button">
 
           <el-badge :is-dot="isModify" class="item">
-            <el-button type="primary" size="mini" @click="onSave()">保存</el-button>
+            <el-button type="primary" size="mini" :loading="saveLoading" @click="onSave()">保存</el-button>
           </el-badge>
           <el-badge :is-dot="isPublish" class="item">
-            <el-button type="success" size="mini" @click="onPublish()">发布</el-button>
+            <el-button type="success" size="mini" :loading="publishLoading" @click="onPublish(2)">发布</el-button>
           </el-badge>
           <el-badge class="item">
             <el-button type="default" size="mini" @click="onSetting()">预览和设置</el-button>
@@ -79,6 +79,7 @@ export default {
       isCrop: false,
       imageVisible: false,
       navActive: null
+
     }
   },
   computed: {

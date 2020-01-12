@@ -27,9 +27,9 @@
       :src="music.path"
       @timeupdate="onTimeupdate"
       @loadedmetadata="onLoadedmetadata"
-    >
-      您的浏览器不支持 audio 音乐。
-    </audio>
+      @playing="onPlaying(true)"
+      @pause="onPlaying(false)"
+    />
   </div>
 </template>
 
@@ -72,6 +72,7 @@ export default {
     ...mapMutations([
       'audio/onPlay',
       'audio/onPause',
+      'audio/onPlaying',
       'setMusic',
       'addHistory'
     ]),
@@ -103,6 +104,9 @@ export default {
       this.setMusic(this.music)
       this.addHistory()
       this.$emit('close', false)
+    },
+    onPlaying(status) {
+      this['audio/onPlaying'](status)
     }
 
   }

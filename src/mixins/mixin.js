@@ -1,4 +1,11 @@
+import { mediaPath } from '@/utils/validate.js'
+
 export default {
+  filters: {
+    handleImg(imgUrl) {
+      return mediaPath(imgUrl)
+    }
+  },
   methods: {
     // 深拷贝
     deepCopy(json) {

@@ -12,6 +12,11 @@ export default new Router({
       component: () => import('@/views/index/index.vue')
     },
     {
+      path: '/works/:id',
+      name: 'works',
+      component: () => import('@/views/works/works.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/login/login.vue')
@@ -27,9 +32,10 @@ export default new Router({
       component: () => import('@/views/h5-edit/index.vue')
     },
     {
-      path: '/test',
-      name: 'test',
-      component: () => import('@/views/test.vue')
+      path: '*',
+      name: '404',
+      component: () => import('@/views/404.vue')
+
     }
   ]
 })

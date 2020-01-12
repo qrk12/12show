@@ -11,7 +11,7 @@
         <el-col :span="6">
           <div @click="imageVisible = true">
             <div class="cover-label">封面图片</div>
-            <el-image v-if="h5Json.setting.cover_image.crop" class="cover-image" :src="h5Json.setting.cover_image.crop" fit="cover" />
+            <el-image v-if="h5Json.setting.cover_image.crop" class="cover-image" :src="h5Json.setting.cover_image.crop | handleImg" fit="cover" />
             <img v-else src="@/assets/placeholder.png" class="cover-image">
 
           </div>
@@ -37,29 +37,26 @@
       <el-row class="button-group">
 
         <el-badge :is-dot="isModify" class="item">
-          <el-button type="primary" size="medium" @click="onSave()">保存</el-button>
+          <el-button type="primary" size="medium" :loading="saveLoading" @click="onSave()">保存</el-button>
         </el-badge>
 
         <el-badge :is-dot="isPublish" class="item">
-          <el-button type="success" size="medium" @click="onPublish(2)">发布</el-button>
+          <el-button type="success" size="medium" :loading="publishLoading" @click="onPublish(2)">发布</el-button>
         </el-badge>
 
         <el-badge v-if="worksInfo.status===2" class="item">
-          <el-button type="default" size="medium" @click="onPublish(1)">取消发布</el-button>
-        </el-badge>
-
-        <el-badge class="item">
-          <el-button type="info" size="medium" @click="onPreview">手机预览</el-button>
+          <el-button type="default" size="medium" :loading="cancelLoading" @click="onPublish(1)">取消发布</el-button>
         </el-badge>
 
       </el-row>
 
-      <el-row v-if="preview_url" class="mobile-preview">
+      <el-row class="mobile-preview">
         <div>
-          链接：{{ preview_url }}
+          <input ref="priviewInput" class="input" type="text" readOnly :value="preview_url">
+          <el-button type="primary" size="mini" @click="onCopy">复制</el-button>
         </div>
-        <div>
-          <VueQrcode :value="preview_url" :options="{ width: 200 }" />
+        <div class="qrcode">
+          <VueQrcode :value="preview_url" :options="{ width: 200,margin:0 }" />
         </div>
       </el-row>
 
@@ -74,15 +71,15 @@
 import { mapMutations, mapState } from 'vuex'
 import ImageGallery from '@/components/ImageGallery'
 import mixinWorks from '../mixins/mixin.js'
+import mixin from '@/mixins/mixin.js'
 import VueQrcode from '@chenfengyuan/vue-qrcode'
-import { previewWorks } from '@/api/works.js'
 
 export default {
   components: {
     ImageGallery,
     VueQrcode
   },
-  mixins: [mixinWorks],
+  mixins: [mixinWorks, mixin],
   data() {
     return {
       // 设置
@@ -98,28 +95,33 @@ export default {
   computed: {
     ...mapState(['h5Json', 'worksInfo', 'isModify', 'isPublish'])
   },
+  created() {
+    this.onPreview()
+  },
   methods: {
     ...mapMutations([
       'setting/onSetting',
       'addHistory'
     ]),
-
     onCloseSetting() {
       this['setting/onSetting']()
     },
     onCoverImage(url, origin) {
+      console.log(url, origin)
       this.h5Json.setting.cover_image.crop = url
       this.h5Json.setting.cover_image.origin = origin
       this.addHistory()
     },
     onPreview() {
-      // 保存草稿
-      this.onSave()
-
-      // 生成预览链接
-      previewWorks(this.worksInfo.wid).then(res => {
-        this.preview_url = res.preview_url
-      })
+      const url = window.location.href
+      this.preview_url = url.replace('/h5-edit', 'works')
+    },
+    onCopy() {
+      const input = this.$refs.priviewInput
+      input.select() // 选择对象
+      input.setSelectionRange(0, this.preview_url.length) // 核心
+      document.execCommand('Copy') // 执行浏览器复制命令
+      this.$message.success('已复制')
     }
 
   }
@@ -165,6 +167,17 @@ export default {
       }
       .mobile-preview{
         margin-top: 40px;
+
+        .input{
+          padding: 6px;
+          outline: none;
+          border: 1px solid #cccccc;
+          margin-right: 4px;
+        }
+
+        .qrcode{
+          margin-top: 20px;
+        }
       }
     }
 

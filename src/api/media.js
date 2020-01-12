@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 上传的URL
-export const uploadUrl = process.env.VUE_APP_BASE_API + '/admin/media'
+export const uploadUrl = process.env.VUE_APP_BASE_API ? process.env.VUE_APP_BASE_API + '/admin/media' : '/admin/media'
 
 /**
  * 上传媒体文件

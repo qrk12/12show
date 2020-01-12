@@ -8,7 +8,7 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  return Cookies.set(tokenKey, token)
+  return Cookies.set(tokenKey, token, { SameSite: 'Strict' })
 }
 
 export function removeToken() {
@@ -16,7 +16,7 @@ export function removeToken() {
 }
 
 export function setInfo(info) {
-  return Cookies.set(userInfo, info)
+  return Cookies.set(userInfo, info, { SameSite: 'Strict' })
 }
 
 export function getInfo() {

@@ -5,7 +5,7 @@
         <el-card shadow="always">
           <el-form ref="form" :model="form" :rules="rules">
             <el-form-item label="账号" prop="login">
-              <el-input v-model="form.login" disabled="" />
+              <el-input v-model="form.login" disabled />
             </el-form-item>
             <el-form-item label="旧密码" prop="oldPassword">
               <el-input v-model="form.oldPassword" type="password" />
@@ -18,7 +18,7 @@
               <el-input v-model="form.confirmPassword" type="password" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm">确认</el-button>
+              <el-button type="primary" :disabled="disbaled" @click="submitForm">确认</el-button>
             </el-form-item>
           </el-form>
         </el-card>
@@ -31,6 +31,7 @@
 import { update } from '@/api/user'
 import { getInfo } from '@/utils/auth'
 import { mapActions } from 'vuex'
+import setting from '@/setting.js'
 
 export default {
   name: 'UserPassword',
@@ -63,10 +64,14 @@ export default {
           { required: true, message: '请输入确认密码', trigger: 'blur' },
           { validator: validatePass2, trigger: 'blur' }
         ]
-      }
+      },
+      disbaled: false
     }
   },
   created() {
+    if (setting.isDemo) {
+      this.disbaled = true
+    }
     this.fetchData()
   },
   methods: {

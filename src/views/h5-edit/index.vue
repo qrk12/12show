@@ -23,7 +23,7 @@
     <Settings />
 
     <!-- 右键点击面板 -->
-    <RightClick />
+    <!-- <RightClick /> -->
 
   </div>
 </template>
@@ -34,7 +34,7 @@ import H5Left from './show/h5-left'
 import H5Main from './show/h5-main'
 import H5Right from './show/h5-right'
 import Settings from './show/settings'
-import RightClick from './editor/right-click'
+// import RightClick from './editor/right-click'
 
 import { getWorks } from '@/api/works.js'
 import { mapMutations, mapState } from 'vuex'
@@ -45,7 +45,7 @@ export default {
     H5Left,
     H5Main,
     H5Right,
-    RightClick,
+    // RightClick,
     Settings
   },
   data() {

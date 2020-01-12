@@ -30,6 +30,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import ItemTemplate from './item-template'
 import MobileBorder from './mobile-border'
 import RightOperation from '../editor/right-operation'
+import { mediaPath } from '@/utils/validate.js'
 
 export default {
   name: 'H5Main',
@@ -63,7 +64,8 @@ export default {
     ...mapGetters(['currentPageData']),
     getBackground() {
       if (this.currentPageData.background.image.crop) {
-        return 'background: url(' + this.currentPageData.background.image.crop + ') center center / cover no-repeat;'
+        const imgUrl = mediaPath(this.currentPageData.background.image.crop)
+        return 'background: url(' + imgUrl + ') center center / cover no-repeat;'
       } else if (this.currentPageData.background.color) {
         return 'background: ' + this.currentPageData.background.color
       } else {

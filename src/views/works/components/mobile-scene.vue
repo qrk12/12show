@@ -1,5 +1,5 @@
 <template>
-  <div class="page" @touchstart="onMousedown" @touchstart.once="onInitMusic" @touchend="onCancelDrag" @touchmove="onMousemove">
+  <div class="page" @touchstart="onMousedown" @touchend="onCancelDrag" @touchmove="onMousemove">
 
     <div class="main">
 
@@ -7,14 +7,23 @@
 
         <div v-if="show" class="show-screen" :style="getBackground(itemPage.background)">
 
-          <ItemTemplate v-for="(item, index) in itemPage.items" :key="item.id" :item="item" :show-index="index" :width-rate="widthRate" :height-rate="heightRate" />
+          <ItemTemplate
+            v-for="(item, index) in itemPage.items"
+            :key="item.id"
+            :item="item"
+            :show-index="index"
+            :width-rate="widthRate"
+            :height-rate="heightRate"
+          />
 
         </div>
 
       </transition>
 
       <i class="el-icon-arrow-up arrow-up" />
-      <svg-icon class="music-icon" :class="{'music-icon-circle':audioPlaying}" icon-class="music" @touchstart.stop="onPlayPause()" />
+
+      <svg-icon v-if="pagesData.bgMusic.path" class="music-icon" :class="{'music-icon-circle':audioPlaying}" icon-class="music" @click.stop="onPlayPause()" />
+
       <el-progress :percentage="percentage" :show-text="false" :stroke-width="3" class="percentage" />
 
     </div>
@@ -23,7 +32,10 @@
       ref="audio"
       loop
       autoplay
-      :src="itemPage.music.path || pagesData.defaultMusic.path"
+      preload="auto"
+      :src="pagesData.bgMusic.path"
+      @playing="audioPlaying = true"
+      @pause="audioPlaying = false"
     />
 
   </div>
@@ -32,10 +44,9 @@
 <script>
 
 import ItemTemplate from './item-template'
-import wx from 'weixin-js-sdk'
+import { mediaPath } from '@/utils/validate.js'
 
 export default {
-  name: 'IndexShow',
   components: {
     ItemTemplate
   },
@@ -55,7 +66,7 @@ export default {
       initY: 0,
       // 页面数据
       pagesData: {},
-      audioPlaying: true,
+      audioPlaying: false,
       widthRate: 1,
       heightRate: 1
     }
@@ -84,22 +95,7 @@ export default {
   },
   created() {
     this.initData()
-
-    // 微信背景播放视频
-    wx.config({
-      debug: false,
-      appId: '',
-      timestamp: 1,
-      nonceStr: '',
-      signature: '',
-      jsApiList: []
-    })
-    // 在ready时触发相关事件
-    const that = this
-    wx.ready(function() {
-      // 触发一下play事件
-      that.audioPlay()
-    })
+    console.log(this.pagesData.bgMusic.path)
   },
   methods: {
     initData() {
@@ -113,8 +109,9 @@ export default {
       this.heightRate = clientHeight / 486
     },
     getBackground(background) {
-      if (background.image) {
-        return 'background: url(' + background.image.crop + ') center center / cover no-repeat;'
+      if (background.image.crop) {
+        const crop = mediaPath(background.image.crop)
+        return 'background: url(' + crop + ') center center / cover no-repeat;'
       } else {
         return 'background: ' + background.color
       }
@@ -142,7 +139,6 @@ export default {
       this.pageAnimate()
     },
     onMousedown(e) {
-      console.log('mousedown:', e)
       this.initY = e.touches[0].clientY
       this.isDrag = true
     },
@@ -171,22 +167,9 @@ export default {
     },
     audioPlay() {
       this.$refs.audio.play()
-      this.audioPlaying = true
     },
     audioPause() {
       this.$refs.audio.pause()
-      this.audioPlaying = false
-    },
-    onInitMusic() {
-      // 解决手机端限制自动播放的问题
-      console.log('onInitMusic')
-      this.audioPlay()
-      setTimeout(() => {
-        this.audioPause()
-      }, 10)
-      setTimeout(() => {
-        this.audioPlay()
-      }, 100)
     }
   }
 }
@@ -206,11 +189,12 @@ export default {
     overflow: hidden;
 
   .main{
+    width: 100%;
+    height: 100%;
     .show-screen{
       width: 100%;
       height: 100%;
     }
-
   }
 
   .arrow-up{

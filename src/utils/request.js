@@ -9,7 +9,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    config.headers['Authorization'] = getToken()
+    config.headers['UserToken'] = getToken()
     config.validateStatus = function(status) {
       return status < 500 // 不拦截的状态码
     }
@@ -40,7 +40,7 @@ service.interceptors.response.use(
     } else {
       // 错误
       Message({
-        message: data.error,
+        message: data.error || '服务器错误',
         type: 'error',
         duration: 5000
       })

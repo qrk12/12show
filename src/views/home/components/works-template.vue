@@ -1,15 +1,24 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-row :gutter="20">
       <el-col v-for="(item,index) in list" :key="item.wid" :span="4" class="item">
         <el-card :body-style="{ padding: '0px' }">
-          <img v-if="item.cover_image" :src="item.cover_image" alt="封面图片" class="image">
-          <img v-else src="@/assets/placeholder.png" alt="占位图" class="image">
+
+          <div v-if="qrcodeIndex===index">
+            <VueQrcode class="image" :value="item.showUrl" tag="img" :options="{ width: 215 }" />
+          </div>
+          <div v-else>
+            <img v-if="item.cover_image" :src="item.cover_image | handleImg" alt="封面图片" class="image">
+            <img v-else src="@/assets/placeholder.png" alt="占位图" class="image">
+          </div>
+
           <div class="content">
-            <div class="status">
+            <div class="status flex-space-between">
               <el-tag v-if="item.status === 1" class="tag" type="info" size="mini">未发布</el-tag>
               <el-tag v-if="item.status === 2" class="tag" type="success" size="mini">已发布</el-tag>
               <el-tag v-if="item.is_template === 2" class="tag" size="mini">模版</el-tag>
+
+              <svg-icon icon-class="qrcode" :style="{color: qrcodeIndex===index ? '#409EFF' : '#000000'}" @mouseenter="showQrcode(index)" @mouseleave="qrcodeIndex = null" />
 
             </div>
             <h2 class="title">{{ item.title }}</h2>
@@ -41,9 +50,14 @@
 <script>
 import { listWorks } from '@/api/works'
 import { createWorks, getWorks, deleteWorks } from '@/api/works'
+import VueQrcode from '@chenfengyuan/vue-qrcode'
+import mixin from '@/mixins/mixin.js'
 
 export default {
-  name: 'WorksTemplate',
+  components: {
+    VueQrcode
+  },
+  mixins: [mixin],
   props: {
     activeIndex: {
       type: String,
@@ -58,7 +72,9 @@ export default {
         per_page: 24,
         page: 1,
         is_template: 1 // 不是模版
-      }
+      },
+      qrcodeIndex: null,
+      loading: false
     }
   },
   created() {
@@ -66,9 +82,19 @@ export default {
   },
   methods: {
     fetchData() {
+      const url = window.location.href
+      this.loading = true
       listWorks(this.form).then(res => {
+        res.data.forEach(element => {
+          const suffix = 'works/' + element.wid
+          element.showUrl = url.replace('home', suffix)
+        })
+
+        this.loading = false
         this.list = res.data
         this.total = res.total
+      }).catch(() => {
+        this.loading = false
       })
     },
     onEdit(wid) {
@@ -102,6 +128,9 @@ export default {
       }).catch(() => {
         console.log('取消')
       })
+    },
+    showQrcode(index) {
+      this.qrcodeIndex = index
     }
   }
 }

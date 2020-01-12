@@ -5,8 +5,9 @@ import 'nprogress/nprogress.css'// Progress 进度条样式
 // import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth' // 验权
 
-const whiteList = ['/login'] // 不重定向白名单
+const whiteList = ['login', 'works'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
+  console.log(to)
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login') {
@@ -16,7 +17,7 @@ router.beforeEach((to, from, next) => {
       next()
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.indexOf(to.name) !== -1) {
       next()
     } else {
       next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页

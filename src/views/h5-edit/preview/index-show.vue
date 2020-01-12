@@ -33,21 +33,21 @@
       ref="audio"
       loop
       autoplay
-      autobuffer
       preload="auto"
       :src="pagesData.bgMusic.path"
+      @playing="audioPlaying = true"
+      @pause="audioPlaying = false"
     />
 
   </div>
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
 import ItemTemplate from './item-template'
+import { mediaPath } from '@/utils/validate.js'
 
 export default {
-  name: 'IndexShow',
   components: {
     ItemTemplate
   },
@@ -67,7 +67,7 @@ export default {
       initY: 0,
       // 页面数据
       pagesData: {},
-      audioPlaying: true
+      audioPlaying: false
     }
   },
 
@@ -100,8 +100,9 @@ export default {
       }
     },
     getBackground(background) {
-      if (background.image) {
-        return 'background: url(' + background.image.crop + ') center center / cover no-repeat;'
+      if (background.image.crop) {
+        const crop = mediaPath(background.image.crop)
+        return 'background: url(' + crop + ') center center / cover no-repeat;'
       } else {
         return 'background: ' + background.color
       }
@@ -129,7 +130,6 @@ export default {
       this.pageAnimate()
     },
     onMousedown(e) {
-      console.log('mouse down', e)
       this.initY = e.clientY
       this.isDrag = true
     },
@@ -157,11 +157,9 @@ export default {
     },
     audioPlay() {
       this.$refs.audio.play()
-      this.audioPlaying = true
     },
     audioPause() {
       this.$refs.audio.pause()
-      this.audioPlaying = false
     },
     jumpPage(index) {
       this.activeIndex = index

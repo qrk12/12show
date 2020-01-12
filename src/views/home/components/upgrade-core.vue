@@ -12,6 +12,7 @@
               class="upgrade-button"
               type="danger"
               size="mini"
+              :disabled="disabled"
               @click="onUpgrade"
             >
               <span v-if="updateInfo.isUpgrade === 1">现在升级</span>
@@ -33,13 +34,15 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { upgrade } from '@/api/upgrade.js'
+import setting from '@/setting.js'
 
 export default {
   name: 'UpdateCore',
 
   data() {
     return {
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      disabled: false
     }
   },
   computed: {
@@ -48,6 +51,9 @@ export default {
     })
   },
   created() {
+    if (setting.isDemo) {
+      this.disabled = true
+    }
     this['user/upgrapde']()
   },
   methods: {

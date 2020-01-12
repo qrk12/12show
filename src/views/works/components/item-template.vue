@@ -12,7 +12,7 @@
       :width="itemJson.positionSize.width"
       :height="itemJson.positionSize.height"
       :style="[itemJson.text, tempAnimate]"
-      :src="item.content"
+      :src="item.content | handleImg"
     >
 
   </div>
@@ -20,10 +20,9 @@
 
 <script>
 import mixin from '@/mixins/mixin.js'
-import { setTimeout } from 'timers'
+// import { setTimeout } from 'timers'
 
 export default {
-  name: 'ItemTemplate',
 
   mixins: [mixin],
   props: {

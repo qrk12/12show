@@ -14,13 +14,14 @@ export default {
   },
 
   mutations: {
+    onPlaying(state, status) {
+      state.playing = status
+    },
     onPlay(state) {
       state.play += 1
-      state.playing = true
     },
     onPause(state) {
       state.pause += 1
-      state.playing = false
     },
     setMusic(state, music) {
       state.music = music

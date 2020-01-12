@@ -1,25 +1,39 @@
 import { mapActions } from 'vuex'
 
 export default {
+  data() {
+    return {
+      saveLoading: false,
+      publishLoading: false,
+      cancelLoading: false
+    }
+  },
   methods: {
     ...mapActions(['saveWorks', 'publishWorks']),
     onSave() {
-      const loading = this.$loading()
+      this.saveLoading = true
       this.saveWorks().then(res => {
-        loading.close()
+        this.saveLoading = false
       }).catch(() => {
-        loading.close()
+        this.saveLoading = false
         this.$message.error('更新失败')
       })
     },
     onPublish(status) {
-      const loading = this.$loading()
+      this.publishStatus(status, true)
       this.publishWorks(status).then(res => {
-        loading.close()
+        this.publishStatus(status, false)
       }).catch(() => {
-        loading.close()
+        this.publishStatus(status, false)
         this.$message.error('发布失败')
       })
+    },
+    publishStatus(status, isLoading) {
+      if (status === 1) {
+        this.cancelLoading = isLoading
+      } else {
+        this.publishLoading = isLoading
+      }
     }
   }
 }

@@ -13,7 +13,7 @@
         <el-image
           v-if="currentPageData.background.image.crop"
           style="width: 326px; height: 200px"
-          :src="currentPageData.background.image.crop"
+          :src="currentPageData.background.image.crop | handleImg"
           fit="contain"
         />
         <i v-else class="el-icon-plus icon" />
@@ -21,7 +21,7 @@
 
       <div class="images-button">
         <el-button v-if="currentPageData.background.image.origin" type="primary" size="mini" icon="el-icon-crop" plain @click="cropImgVisible = true">裁剪图片</el-button>
-        <el-button type="primary" size="mini" icon="el-icon-delete" plain @click="onDelete()">删除图片</el-button>
+        <el-button v-if="currentPageData.background.image.origin" type="primary" size="mini" icon="el-icon-delete" plain @click="onDelete()">删除图片</el-button>
         <el-button type="primary" size="mini" icon="el-icon-refresh" @click="imageVisible = true">更换图片</el-button>
 
       </div>
@@ -48,13 +48,14 @@
 import { mapGetters, mapMutations } from 'vuex'
 import ImageGallery from '@/components/ImageGallery'
 import ImageCrop from '@/components/ImageGallery/image-crop'
+import mixin from '@/mixins/mixin.js'
 
 export default {
-  name: 'PageSetting',
   components: {
     ImageGallery,
     ImageCrop
   },
+  mixins: [mixin],
   data() {
     return {
       imageVisible: false,
