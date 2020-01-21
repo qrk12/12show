@@ -30,3 +30,15 @@ export function isMobile() {
     return false
   }
 }
+
+/**
+ * 判断是否demo
+ */
+export function isDemo() {
+  const domain = window.location.host
+  if (domain === 'demo.12show.xyz') {
+    return true
+  } else {
+    return false
+  }
+}

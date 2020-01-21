@@ -26,7 +26,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import setting from '@/setting.js'
+import { isDemo } from '@/utils/validate.js'
 
 export default {
   data() {
@@ -47,7 +47,7 @@ export default {
     }
   },
   created() {
-    if (setting.isDemo) {
+    if (isDemo()) {
       this.form = {
         login: 'admin',
         password: 'admin'

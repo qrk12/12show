@@ -31,7 +31,7 @@
 import { update } from '@/api/user'
 import { getInfo } from '@/utils/auth'
 import { mapActions } from 'vuex'
-import setting from '@/setting.js'
+import { isDemo } from '@/utils/validate.js'
 
 export default {
   name: 'UserPassword',
@@ -69,7 +69,7 @@ export default {
     }
   },
   created() {
-    if (setting.isDemo) {
+    if (isDemo()) {
       this.disbaled = true
     }
     this.fetchData()

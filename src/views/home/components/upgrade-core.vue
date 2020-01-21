@@ -34,7 +34,6 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { upgrade } from '@/api/upgrade.js'
-import setting from '@/setting.js'
 
 export default {
   name: 'UpdateCore',
@@ -51,15 +50,12 @@ export default {
     })
   },
   created() {
-    if (setting.isDemo) {
-      this.disabled = true
-    }
     this['user/upgrapde']()
   },
   methods: {
     ...mapActions(['user/upgrapde']),
     onUpgrade() {
-      this.$confirm('已备份数据库和网站文件, 确定升级?', '提示', {
+      this.$confirm('是否备份数据库和网站文件, 确定升级?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
