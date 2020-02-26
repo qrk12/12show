@@ -40,9 +40,10 @@ export const defaultItem = {
   animate: [],
   // 点击事件
   click: {
-    type: '', // link:链接跳转 page:跳转页面
+    type: '', // link:链接跳转 page:跳转页面 tel:拨打电话
     link: '',
-    page: ''
+    page: '',
+    tel: ''
   }
 }
 

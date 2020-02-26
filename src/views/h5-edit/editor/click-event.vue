@@ -7,10 +7,11 @@
       class="form"
       label-width="40px"
     >
-      <el-form-item label="跳转">
+      <el-form-item label="点击">
         <el-select v-model="currentItemData.click.type" placeholder="点击" clearable @change="onType">
-          <el-option label="链接" value="link" />
-          <el-option label="页面" value="page" />
+          <el-option label="跳转链接" value="link" />
+          <el-option label="跳转页面" value="page" />
+          <el-option label="拨打电话" value="tel" />
         </el-select>
       </el-form-item>
 
@@ -23,6 +24,11 @@
           <el-option v-for="(item,index) in scenePages" :key="index" :label="item" :value="index" />
         </el-select>
       </el-form-item>
+
+      <el-form-item v-if="currentItemData.click.type === 'tel'" label="电话" prop="tel">
+        <el-input v-model="currentItemData.click.tel" type="number" placeholder="电话号码" clearable />
+      </el-form-item>
+
     </el-form>
   </div>
 </template>
@@ -64,7 +70,8 @@ export default {
         const data = {
           type: '',
           link: '',
-          page: ''
+          page: '',
+          tel: ''
         }
         this.$set(this.currentItemData, 'click', data)
       }

@@ -146,10 +146,12 @@ export default {
     onJump(item) {
       console.log('click', item)
       if (item.click) {
-        if (item.click.type === 'link') {
+        if (item.click.type === 'link' && item.click.link !== '') {
           window.open(item.click.link)
-        } else if (item.click.type === 'page') {
+        } else if (item.click.type === 'page' && item.click.page !== '') {
           this.$emit('jumpPage', item.click.page - 1)
+        } else if (item.click.type === 'tel' && item.click.tel !== '') {
+          window.location.href = 'tel:' + item.click.tel
         }
       }
     }
