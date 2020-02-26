@@ -30,27 +30,16 @@
                 <el-menu-item index="UserPassword">修改密码</el-menu-item>
                 <el-menu-item index="signout">退出登录</el-menu-item>
               </el-submenu>
-
             </el-menu>
           </el-col>
         </el-row>
-
       </el-header>
       <el-main>
-
         <component :is="activeIndex" />
-
       </el-main>
-      <el-footer class="background-main-color">
-        <div class="footer">
-          copyright 12show 自由部署的H5制作程序
 
-          {{ currentVersion }}
-
-        </div>
-      </el-footer>
+      <CopyrightFooter />
     </el-container>
-
   </div>
 </template>
 
@@ -60,13 +49,15 @@ import { initJson } from '@/utils/data.js'
 import WorksTemplate from './components/works-template'
 import UserPassword from './components/user-password'
 import UpgradeCore from './components/upgrade-core'
+import CopyrightFooter from '@/components/CopyrightFooter'
 import { mapState, mapActions } from 'vuex'
 
 export default {
   components: {
     WorksTemplate,
     UserPassword,
-    UpgradeCore
+    UpgradeCore,
+    CopyrightFooter
   },
   data() {
     return {
@@ -102,11 +93,12 @@ export default {
         description: '默认描述',
         draft: JSON.stringify(initJson)
       }
-      createWorks(form).then(res => {
-        this.$router.push({
-          path: `/h5-edit/${res.wid}`
+      createWorks(form)
+        .then(res => {
+          this.$router.push({
+            path: `/h5-edit/${res.wid}`
+          })
         })
-      })
         .catch(e => {
           console.log(e)
         })
@@ -121,24 +113,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.brand{
-    font-size: 24px;
-    color: #ffffff;
-    line-height: 60px;
-    cursor: pointer;
+.brand {
+  font-size: 24px;
+  color: #ffffff;
+  line-height: 60px;
+  cursor: pointer;
 }
 
-.badge{
+.badge {
   line-height: 2em;
 }
 
-.el-main{
-    min-height: 85vh;
+.el-main {
+  min-height: 85vh;
 }
 
-.footer{
-  color: #ffffff;
-  line-height: 60px;
-  text-align: center;
-}
 </style>

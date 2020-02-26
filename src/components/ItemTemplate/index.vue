@@ -1,15 +1,12 @@
 <template>
   <div class="h5-item" :style="[itemJson.positionSize]">
-
     <div
       v-if="item.type === 'text'"
       ref="item"
       class="show-item"
       :style="[itemJson.text, tempAnimate]"
       @click="onJump(item)"
-    >
-      {{ item.content }}
-    </div>
+    >{{ item.content }}</div>
 
     <img
       v-if="item.type === 'img'"
@@ -21,13 +18,12 @@
       :src="item.content | handleImg"
       @click="onJump(item)"
     >
-
   </div>
 </template>
 
 <script>
 import mixin from '@/mixins/mixin.js'
-import { setTimeout } from 'timers'
+// import { setTimeout } from 'timers'
 
 export default {
   mixins: [mixin],
@@ -41,8 +37,15 @@ export default {
     showIndex: {
       type: Number,
       default: 0
+    },
+    widthRate: {
+      type: Number,
+      default: 1
+    },
+    heightRate: {
+      type: Number,
+      default: 1
     }
-
   },
   data() {
     return {
@@ -51,21 +54,25 @@ export default {
     }
   },
   computed: {
-
     itemJson() {
       const item = this.deepCopy(this.item)
+
       // 堆叠顺序
       item.positionSize.zIndex = this.showIndex
       // 添加单位
       const unit = 'px'
-      item.text.fontSize += unit
-      item.text.padding += unit
-      item.text.borderWidth += unit
-      item.text.borderRadius += unit
-      item.positionSize.left += unit
-      item.positionSize.top += unit
-      item.positionSize.width += unit
-      item.positionSize.height += unit
+      item.text.fontSize = item.text.fontSize * this.widthRate + unit
+      item.text.padding = item.text.padding * this.widthRate + unit
+      item.text.borderWidth = item.text.borderWidth * this.widthRate + unit
+      item.text.borderRadius = item.text.borderRadius * this.widthRate + unit
+      item.positionSize.left = item.positionSize.left * this.widthRate + unit
+
+      item.positionSize.top = item.positionSize.top * this.heightRate + unit
+
+      // 框宽度
+      item.positionSize.width = item.positionSize.width * this.widthRate + unit
+      item.positionSize.height =
+        item.positionSize.height * this.widthRate + unit
 
       const em = 'em'
       item.text.letterSpacing += em
@@ -80,12 +87,20 @@ export default {
       return item
     }
   },
-
   methods: {
-
     // 处理阴影方向值
     handleShadowDire(boxShadow) {
-      return boxShadow.hShadow + 'px ' + boxShadow.vShadow + 'px ' + boxShadow.blur + 'px ' + boxShadow.spread + 'px ' + boxShadow.color
+      return (
+        boxShadow.hShadow +
+        'px ' +
+        boxShadow.vShadow +
+        'px ' +
+        boxShadow.blur +
+        'px ' +
+        boxShadow.spread +
+        'px ' +
+        boxShadow.color
+      )
     },
     // 等页面动画完成,执行元素动画
     delayLoopAnimate() {
@@ -118,17 +133,18 @@ export default {
       const currentAnimate = this.item.animate[index]
       this.playAnimate(currentAnimate)
 
-      const delay = (currentAnimate.animationDuration + currentAnimate.animationDelay) * currentAnimate.animationIterationCount
+      const delay =
+        (currentAnimate.animationDuration + currentAnimate.animationDelay) *
+        currentAnimate.animationIterationCount
 
       setTimeout(() => {
         if (index + 1 < total) {
           this.loopAnimate(index + 1, total)
         }
       }, delay * 1000)
-    },
-    // 跳转
+    }, // 跳转
     onJump(item) {
-      console.log(item)
+      console.log('click', item)
       if (item.click) {
         if (item.click.type === 'link') {
           window.open(item.click.link)
@@ -137,16 +153,14 @@ export default {
         }
       }
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.h5-item{
+.h5-item {
   position: absolute;
   cursor: default;
 }
-
 </style>
 

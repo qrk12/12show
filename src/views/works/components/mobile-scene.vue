@@ -14,6 +14,7 @@
             :show-index="index"
             :width-rate="widthRate"
             :height-rate="heightRate"
+            @jumpPage="jumpPage"
           />
 
         </div>
@@ -43,7 +44,8 @@
 
 <script>
 
-import ItemTemplate from './item-template'
+// import ItemTemplate from './item-template'
+import ItemTemplate from '@/components/ItemTemplate'
 import { mediaPath } from '@/utils/validate.js'
 
 export default {
@@ -170,6 +172,9 @@ export default {
     },
     audioPause() {
       this.$refs.audio.pause()
+    },
+    jumpPage(index) {
+      this.activeIndex = index
     }
   }
 }

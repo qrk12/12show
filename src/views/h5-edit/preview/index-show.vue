@@ -44,7 +44,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import ItemTemplate from './item-template'
+// import ItemTemplate from './item-template'
+import ItemTemplate from '@/components/ItemTemplate'
 import { mediaPath } from '@/utils/validate.js'
 
 export default {

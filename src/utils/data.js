@@ -38,11 +38,11 @@ export const defaultItem = {
   },
   // 动画类型
   animate: [],
-  // 链接跳转
-  link: {
-    isWebsite: false,
-    url: '',
-    page: null
+  // 点击事件
+  click: {
+    type: '', // link:链接跳转 page:跳转页面
+    link: '',
+    page: ''
   }
 }
 

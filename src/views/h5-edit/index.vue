@@ -25,6 +25,8 @@
     <!-- 右键点击面板 -->
     <!-- <RightClick /> -->
 
+    <CopyrightFooter />
+
   </div>
 </template>
 
@@ -34,6 +36,8 @@ import H5Left from './show/h5-left'
 import H5Main from './show/h5-main'
 import H5Right from './show/h5-right'
 import Settings from './show/settings'
+import CopyrightFooter from '@/components/CopyrightFooter'
+
 // import RightClick from './editor/right-click'
 
 import { getWorks } from '@/api/works.js'
@@ -45,8 +49,10 @@ export default {
     H5Left,
     H5Main,
     H5Right,
-    // RightClick,
+    CopyrightFooter,
     Settings
+    // RightClick,
+
   },
   data() {
     return {

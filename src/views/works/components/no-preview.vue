@@ -5,11 +5,21 @@
     </div>
 
     <div class="footer">
-      copyright 12show 自由部署的H5制作程序
+      <CopyrightFooter />
     </div>
 
   </div>
 </template>
+
+<script>
+import CopyrightFooter from '@/components/CopyrightFooter'
+
+export default {
+  components: {
+    CopyrightFooter
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .content{
@@ -22,8 +32,6 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    text-align: center;
-    line-height: 2.6em;
     background-color: #304156;
     color: #ffffff;
 }

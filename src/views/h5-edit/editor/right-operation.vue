@@ -22,11 +22,7 @@
         <i class="el-icon-document-copy icon" :class="{active: clipboard.length !== 0}" />
       </el-tooltip>
     </div>
-    <div class="item" @mousedown.stop="onSetLink">
-      <el-tooltip effect="dark" content="链接" placement="right">
-        <i class="el-icon-link icon" :class="{active: activeItem !== null}" />
-      </el-tooltip>
-    </div>
+
     <div class="item" @mousedown.stop="setZindex(1)">
       <el-tooltip effect="dark" content="上移" placement="right">
         <i class="el-icon-top icon" :class="{active: activeItem !== null}" />
@@ -73,7 +69,6 @@ export default {
   },
   data() {
     return {
-      jumpLinkVisible: false,
       // 剪贴板
       clipboard: [],
       // 是否框选
@@ -223,19 +218,15 @@ export default {
     },
     onMusic() {
       this['audio/setAudioVisible'](true)
-    },
-    onSetLink() {
-      if (this.activeItem !== null) {
-        this['setting/setLink']()
-      }
     }
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .operation{
-  margin-left: 40px;
+  margin-left: 30px;
   margin-top: 50px;
   padding: 60px 6px 0px 6px;
   height: 428px;

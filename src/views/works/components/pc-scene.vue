@@ -3,8 +3,8 @@
     <div>
       <IndexShow :works-info="worksInfo" />
     </div>
-    <div class="footer background-main-color">
-      copyright 12show
+    <div class="footer">
+      <CopyrightFooter />
     </div>
 
   </div>
@@ -12,9 +12,11 @@
 
 <script>
 import IndexShow from '@/views/h5-edit/preview/index-show'
+import CopyrightFooter from '@/components/CopyrightFooter'
 export default {
   components: {
-    IndexShow
+    IndexShow,
+    CopyrightFooter
   },
   props: {
     worksInfo: {
@@ -35,7 +37,6 @@ export default {
         bottom: 0;
         width: 100vw;
         color: #ffffff;
-        line-height: 60px;
         text-align: center;
     }
 }
