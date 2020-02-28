@@ -22,7 +22,7 @@
         </el-tab-pane>
       </el-tabs>
 
-      <ImageLink :image-link-visible.sync="imageLinkVisible" />
+      <ImageLink :image-link-visible.sync="imageLinkVisible" @success="onUploadSuccess" />
       <ImageUpload :image-upload-visible.sync="imageUploadVisible" @success="onUploadSuccess" />
 
     </el-dialog>

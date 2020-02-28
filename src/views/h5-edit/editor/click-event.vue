@@ -9,6 +9,7 @@
     >
       <el-form-item label="点击">
         <el-select v-model="currentItemData.click.type" placeholder="点击" clearable @change="onType">
+          <el-option label="无" value="" />
           <el-option label="跳转链接" value="link" />
           <el-option label="跳转页面" value="page" />
           <el-option label="拨打电话" value="tel" />
@@ -84,7 +85,3 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.form {
-}
-</style>

@@ -15,7 +15,7 @@
 
         <div v-if="bgMusic.path" class="bg-music">
           <span>当前背景音乐：</span>
-          <span>{{ bgMusic.name }}</span>
+          <span style="color:#F56C6C;">{{ bgMusic.name }}</span>
           <el-button class="button" type="warning" round plain size="mini" @click="onBgMusic">播放</el-button>
           <el-button class="button" type="danger" round plain size="mini" @click="onDeleteBgMusic">删除</el-button>
         </div>

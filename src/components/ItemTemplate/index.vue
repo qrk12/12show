@@ -18,14 +18,40 @@
       :src="item.content | handleImg"
       @click="onJump(item)"
     >
+
+    <video
+      v-if="item.type === 'video'"
+      ref="item"
+      class="show-item"
+      :width="itemJson.positionSize.width"
+      :height="itemJson.positionSize.height"
+      :style="[itemJson.text, tempAnimate]"
+      :src="item.content | handleImg"
+      controls
+    />
+
+    <div
+      v-if="item.type === 'countUp'"
+      class="show-item"
+      :style="[itemJson.text, tempAnimate]"
+    >
+      <CountUp
+        v-if="item.type === 'countUp'"
+        :extras="item.extras"
+      />
+    </div>
+
   </div>
 </template>
 
 <script>
 import mixin from '@/mixins/mixin.js'
-// import { setTimeout } from 'timers'
+import CountUp from '../CountUp'
 
 export default {
+  components: {
+    CountUp
+  },
   mixins: [mixin],
   props: {
     item: {

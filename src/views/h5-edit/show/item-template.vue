@@ -1,7 +1,6 @@
 <template>
   <!-- <div class="h5-item" @contextmenu.prevent="rightClick($event)" @click="selectElement"> -->
   <div class="h5-item" @click="selectElement">
-
     <VueDragResize
       :is-active="!isPageTemplate && showIndex === activeItem || isActive"
       :w="itemJson.positionSize.width"
@@ -17,10 +16,8 @@
       <div
         v-if="item.type === 'text'"
         class="show-item"
-        :style="[itemJson.text, tempAnimate, positionSize]"
-      >
-        {{ item.content }}
-      </div>
+        :style="[itemJson.text, tempAnimate]"
+      >{{ item.content }}</div>
 
       <img
         v-if="item.type === 'img'"
@@ -30,8 +27,29 @@
         :style="[itemJson.text, tempAnimate]"
         :src="item.content | handleImg"
       >
-    </VueDragResize>
 
+      <video
+        v-if="item.type === 'video'"
+        class="show-item"
+        :width="itemJson.positionSize.width"
+        :height="itemJson.positionSize.height"
+        :style="[itemJson.text, tempAnimate]"
+        :src="item.content | handleImg"
+        controls
+      />
+
+      <div
+        v-if="item.type === 'countUp'"
+        class="show-item"
+        :style="[itemJson.text, tempAnimate]"
+      >
+        <CountUp
+          v-if="item.type === 'countUp'"
+          :extras="item.extras"
+        />
+      </div>
+
+    </VueDragResize>
   </div>
 </template>
 
@@ -40,11 +58,13 @@ import mixin from '@/mixins/mixin.js'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { setTimeout } from 'timers'
 import VueDragResize from 'vue-drag-resize'
+import CountUp from '@/components/CountUp'
 
 export default {
   name: 'ItemTemplate',
   components: {
-    VueDragResize
+    VueDragResize,
+    CountUp
   },
   mixins: [mixin],
   props: {
@@ -116,15 +136,15 @@ export default {
       item.text.boxShadow = this.handleShadowDire(item.boxShadow)
 
       return item
-    },
-    positionSize() {
-      return {
-        width: this.item.positionSize.width + 'px',
-        height: this.item.positionSize.height + 'px',
-        left: this.item.positionSize.left + 'px',
-        top: this.item.positionSize.top + 'px'
-      }
     }
+    // positionSize() {
+    //   return {
+    //     width: this.item.positionSize.width + 'px',
+    //     height: this.item.positionSize.height + 'px',
+    //     left: this.item.positionSize.left + 'px',
+    //     top: this.item.positionSize.top + 'px'
+    //   }
+    // }
   },
   watch: {
     // 触发动画
@@ -151,7 +171,9 @@ export default {
           const currentAnimate = animate[0]
           this.playAnimate(currentAnimate)
 
-          const delay = (currentAnimate.animationDuration + currentAnimate.animationDelay) * currentAnimate.animationIterationCount
+          const delay =
+            (currentAnimate.animationDuration + currentAnimate.animationDelay) *
+            currentAnimate.animationIterationCount
           console.log(delay)
 
           setTimeout(() => {
@@ -175,7 +197,17 @@ export default {
     },
     // 处理阴影方向值
     handleShadowDire(boxShadow) {
-      return boxShadow.hShadow + 'px ' + boxShadow.vShadow + 'px ' + boxShadow.blur + 'px ' + boxShadow.spread + 'px ' + boxShadow.color
+      return (
+        boxShadow.hShadow +
+        'px ' +
+        boxShadow.vShadow +
+        'px ' +
+        boxShadow.blur +
+        'px ' +
+        boxShadow.spread +
+        'px ' +
+        boxShadow.color
+      )
     },
     // 播放动画
     playAnimate(currentAnimate) {
@@ -197,7 +229,9 @@ export default {
       const currentAnimate = this.item.animate[index]
       this.playAnimate(currentAnimate)
 
-      const delay = (currentAnimate.animationDuration + currentAnimate.animationDelay) * currentAnimate.animationIterationCount
+      const delay =
+        (currentAnimate.animationDuration + currentAnimate.animationDelay) *
+        currentAnimate.animationIterationCount
 
       setTimeout(() => {
         if (index + 1 < total) {
@@ -226,11 +260,13 @@ export default {
       const clientX = this.mainRect.left + this.item.positionSize.left
       const clientY = this.mainRect.top + this.item.positionSize.top
 
-      if (this.isMouseDown &&
+      if (
+        this.isMouseDown &&
         val.startX <= clientX &&
         clientX <= val.endX &&
         val.startY <= clientY &&
-        clientY <= val.endY) {
+        clientY <= val.endY
+      ) {
         this.isActive = true
       } else {
         this.isActive = false
@@ -238,16 +274,14 @@ export default {
 
       this.$emit('onFramSelect', this.showIndex, this.isActive)
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.h5-item{
+.h5-item {
   position: absolute;
   cursor: default;
 }
-
 </style>
 

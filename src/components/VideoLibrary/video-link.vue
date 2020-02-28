@@ -1,19 +1,16 @@
 <template>
   <div>
-    <el-dialog title="外链图片" :visible.sync="imageLinkVisible" :before-close="close" :append-to-body="true">
+    <el-dialog title="外链视频" :visible.sync="videoLinkVisible" :before-close="close" :append-to-body="true">
       <div>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
 
-          <el-form-item label="图片链接" prop="path">
+          <el-form-item label="视频链接" prop="path">
             <el-input v-model.trim="form.path" type="text" />
           </el-form-item>
           <el-form-item v-if="form.path">
-            <el-image
-              style="width: 120px; height: 120px"
-              :src="form.path"
-              placeholder="记载中"
-              fit="contain"
-            />
+
+            <video width="260" :src="form.path" controls />
+
           </el-form-item>
 
           <el-form-item>
@@ -31,7 +28,7 @@ import { createMedia } from '@/api/media.js'
 
 export default {
   props: {
-    imageLinkVisible: {
+    videoLinkVisible: {
       type: Boolean,
       default: false
     }
@@ -39,8 +36,8 @@ export default {
   data() {
     return {
       form: {
-        type: 'img',
-        name: 'link image',
+        type: 'video',
+        name: 'link video',
         path: null
       },
       rules: {
@@ -53,7 +50,7 @@ export default {
   },
   methods: {
     close() {
-      this.$emit('update:imageLinkVisible', false)
+      this.$emit('update:videoLinkVisible', false)
     },
     onSubmit() {
       this.$refs.form.validate(valid => {

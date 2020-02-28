@@ -1,7 +1,7 @@
 // 默认元素
 export const defaultItem = {
   id: null,
-  type: null, // text,img
+  type: null, // text,img,video,countUp
   content: null,
   positionSize: {
     top: 0,
@@ -44,7 +44,9 @@ export const defaultItem = {
     link: '',
     page: '',
     tel: ''
-  }
+  },
+  // 其他组件另外的参数
+  extras: {}
 }
 
 // 初始json

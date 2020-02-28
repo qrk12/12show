@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      :visible.sync="imageUploadVisible"
+      :visible.sync="videoUploadVisible"
       :before-close="close"
       :append-to-body="true"
       width="400px"
@@ -12,15 +12,13 @@
         class="upload-wrap"
         :action="uploadUrl"
         :headers="headers"
-        :data="{type:'img'}"
+        :data="{type:'video'}"
         :on-success="onSucess"
         :on-error="onError"
-        :before-upload="beforeUpload"
-        accept=".jpg,.png,.gif"
+        accept="video/*"
         multiple
       >
         <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过2M</div>
       </el-upload>
 
     </el-dialog>
@@ -33,7 +31,7 @@ import { getToken } from '@/utils/auth'
 
 export default {
   props: {
-    imageUploadVisible: {
+    videoUploadVisible: {
       type: Boolean,
       default: false
     }
@@ -49,18 +47,10 @@ export default {
     close() {
       this.$emit('success', true)
       this.$refs.upload.clearFiles()
-      this.$emit('update:imageUploadVisible', false)
+      this.$emit('update:videoUploadVisible', false)
     },
-
     onError() {
       this.$message.error('上传失败')
-    },
-    beforeUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!')
-      }
-      return isLt2M
     },
     onSucess() {
       this.$emit('success', true)

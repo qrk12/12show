@@ -10,28 +10,28 @@ if (process.env.NODE_ENV === 'production') {
   cdn = {
     css: [
       // element-ui css
-      'https://unpkg.com/element-ui@2.12/lib/theme-chalk/index.css'
+      'https://cdn.staticfile.org/element-ui/2.13.0/theme-chalk/index.css'
     ],
     js: [
       // vue must at first!
-      'https://unpkg.com/vue@2.6.10/dist/vue.min.js',
-      'https://unpkg.com/vue-router@3.0.7/dist/vue-router.min.js',
+      'https://cdn.staticfile.org/vue/2.6.11/vue.min.js',
+      'https://cdn.staticfile.org/vue-router/3.1.3/vue-router.min.js',
       // element-ui js
-      'https://unpkg.com/element-ui@2.12/lib/index.js'
+      'https://cdn.staticfile.org/element-ui/2.13.0/index.js'
     ]
   }
 } else {
   cdn = {
     css: [
       // element-ui css
-      'https://unpkg.com/element-ui@2.12/lib/theme-chalk/index.css'
+      'https://cdn.staticfile.org/element-ui/2.13.0/theme-chalk/index.css'
     ],
     js: [
       // vue must at first!
-      'https://unpkg.com/vue@2.6.10/dist/vue.js',
-      'https://unpkg.com/vue-router@3.0.7/dist/vue-router.js',
+      'https://cdn.staticfile.org/vue/2.6.11/vue.js',
+      'https://cdn.staticfile.org/vue-router/3.1.3/vue-router.js',
       // element-ui js
-      'https://unpkg.com/element-ui@2.12/lib/index.js'
+      'https://cdn.staticfile.org/element-ui/2.13.0/index.js'
     ]
   }
 }

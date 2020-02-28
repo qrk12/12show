@@ -3,10 +3,13 @@
 
     <el-form label-width="80px" class="style-normal">
 
+      <!-- 文字组件 -->
       <el-form-item v-if="currentItemData.type === 'text'" label="文字内容">
         <el-input v-model="currentItemData.content" type="textarea" @change="addHistory" />
       </el-form-item>
+      <!-- / 文字组件 -->
 
+      <!-- 图片组件 -->
       <div v-if="currentItemData.type === 'img'" class="el-form-item">
         <div class="show-image" :style="{ 'background-image': 'url(' + currentItemData.content + ')' }" />
         <div class="images-button">
@@ -14,6 +17,59 @@
           <el-button type="default" size="mini" icon="el-icon-crop" @click="cropImgVisible = true">裁剪图片</el-button>
         </div>
       </div>
+      <!-- / 图片组件 -->
+
+      <!-- countUp组件 -->
+      <div v-if="isType(['countUp'])">
+
+        <el-form-item label="起始数值">
+          <el-input-number
+            v-model="currentItemData.extras.options.startVal"
+            size="small"
+            @change="addHistory"
+          />
+        </el-form-item>
+
+        <el-form-item label="终止数值">
+          <el-input-number
+            v-model="currentItemData.extras.endVal"
+            size="small"
+            @change="addHistory"
+          />
+        </el-form-item>
+
+        <el-form-item label="千位展示">
+          <el-switch
+            v-model="currentItemData.extras.options.useGrouping"
+            @change="addHistory"
+          />
+        </el-form-item>
+
+        <el-form-item label="动画时长">
+          <el-slider
+            v-model="currentItemData.extras.options.duration"
+            show-input
+            :min="0.1"
+            :max="10"
+            :show-tooltip="false"
+            @change="addHistory"
+          />
+        </el-form-item>
+
+        <el-form-item label="延时">
+          <el-slider
+            v-model="currentItemData.extras.delay"
+            show-input
+            :min="0"
+            :max="10"
+            :show-tooltip="false"
+            @change="addHistory"
+          />
+        </el-form-item>
+
+        <el-divider />
+      </div>
+      <!-- / countUp组件 -->
 
       <el-form-item label="背景颜色">
         <el-row>
@@ -26,7 +82,7 @@
         </el-row>
       </el-form-item>
 
-      <el-form-item v-if="currentItemData.type === 'text'" label="文字颜色">
+      <el-form-item v-if="isType(['text','countUp'])" label="文字颜色">
         <el-row>
           <el-col :span="5">
             <el-color-picker v-model="currentItemData.text.color" show-alpha @change="addHistory" />
@@ -37,7 +93,7 @@
         </el-row>
       </el-form-item>
 
-      <el-form-item v-if="currentItemData.type === 'text'" label="对齐方式">
+      <el-form-item v-if="isType(['text','countUp'])" label="对齐方式">
         <el-select v-model="currentItemData.text.textAlign" @change="addHistory">
           <el-option label="居左" value="left" />
           <el-option label="居中" value="center" />
@@ -46,7 +102,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item v-if="currentItemData.type === 'text'" label="字体">
+      <el-form-item v-if="isType(['text','countUp'])" label="字体">
         <el-select v-model="currentItemData.text.fontFamily" @change="addHistory">
           <el-option label="默认字体" value="none" />
           <el-option label="宋体" value="SimSun" />
@@ -63,34 +119,37 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item v-if="currentItemData.type === 'text'" label="大小">
+      <el-form-item v-if="isType(['text','countUp'])" label="大小">
         <el-slider
           v-model="currentItemData.text.fontSize"
           show-input
           :min="12"
           :max="256"
+          :show-tooltip="false"
           @change="addHistory"
         />
       </el-form-item>
 
-      <el-form-item v-if="currentItemData.type === 'text'" label="行高">
+      <el-form-item v-if="isType(['text','countUp'])" label="行高">
         <el-slider
           v-model="currentItemData.text.lineHeight"
           show-input
           :min="0"
           :max="3"
           :step="0.1"
+          :show-tooltip="false"
           @change="addHistory"
         />
       </el-form-item>
 
-      <el-form-item v-if="currentItemData.type === 'text'" label="字距">
+      <el-form-item v-if="isType(['text','countUp'])" label="字距">
         <el-slider
           v-model="currentItemData.text.letterSpacing"
           show-input
           :min="0"
           :max="1"
           :step="0.01"
+          :show-tooltip="false"
           @change="addHistory"
         />
       </el-form-item>
@@ -102,6 +161,7 @@
           :min="0"
           :max="1"
           :step="0.1"
+          :show-tooltip="false"
           @change="addHistory"
         />
       </el-form-item>
@@ -111,6 +171,7 @@
           v-model="currentItemData.transform.rotate"
           show-input
           :max="360"
+          :show-tooltip="false"
           @change="addHistory"
         />
       </el-form-item>
@@ -148,6 +209,14 @@ export default {
     onSelected(url) {
       this.currentItemData.content = url
       this.addHistory()
+    },
+    // 判断类型匹配
+    isType(arr) {
+      if (arr.indexOf(this.currentItemData.type) > -1) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }
