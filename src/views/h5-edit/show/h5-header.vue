@@ -24,7 +24,7 @@
               <i class="el-icon-video-camera white" />
               <span>视频</span>
             </el-menu-item>
-            <el-menu-item index="4-1" @click="addCountUp()">
+            <el-menu-item index="4-2" @click="addCountUp()">
               <svg-icon icon-class="count-up" class="custom-icon" />
               <span>动态数字</span>
             </el-menu-item>
