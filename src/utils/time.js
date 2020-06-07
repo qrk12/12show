@@ -15,3 +15,19 @@ export function realFormatSecond(second) {
     return '00:00'
   }
 }
+
+// 秒时间戳转日期
+export function timestamp2date(uninx) {
+  uninx = uninx * 1000
+  const time = new Date(uninx)
+
+  const y = time.getFullYear()
+  const m = time.getMonth() + 1
+  const d = time.getDate()
+  return y + '-' + add0(m) + '-' + add0(d)
+}
+
+function add0(m) {
+  return m < 10 ? '0' + m : m
+}
+

@@ -23,6 +23,7 @@
 
           </div>
           <div class="item">最新版本：{{ updateInfo.version }}</div>
+          <div class="item">更新时间：{{ timestamp2date(updateInfo.create_time) }}</div>
           <div class="item">更新日志：</div>
           <div class="item change-log">{{ updateInfo.change_log }}</div>
         </el-card>
@@ -34,9 +35,9 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { upgrade } from '@/api/upgrade.js'
+import { timestamp2date } from '@/utils/time.js'
 
 export default {
-  name: 'UpdateCore',
 
   data() {
     return {
@@ -53,6 +54,7 @@ export default {
     this['user/upgrapde']()
   },
   methods: {
+    timestamp2date,
     ...mapActions(['user/upgrapde']),
     onUpgrade() {
       this.$confirm('是否备份数据库和网站文件, 确定升级?', '提示', {

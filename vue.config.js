@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   publicPath: './',
-  outputDir: '/Users/qin/work/php/laradock-test/12show/view',
+  outputDir: 'dist',
   productionSourceMap: false,
   configureWebpack: config => {
     // 不打包，使用cdn
